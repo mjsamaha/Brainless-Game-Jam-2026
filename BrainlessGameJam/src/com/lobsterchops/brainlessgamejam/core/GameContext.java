@@ -7,8 +7,11 @@ import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.scene.GameUpdater;
+import com.lobsterchops.brainlessgamejam.scene.PausedScene;
+import com.lobsterchops.brainlessgamejam.scene.PlayingScene;
 import com.lobsterchops.brainlessgamejam.scene.SceneManager;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
+
 
 public class GameContext {
 	
@@ -23,13 +26,13 @@ public class GameContext {
 		AudioService audioService = new JavaSoundAudioService();
 		audioService.init();
 		
-		GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline, audioService, this::restartRun);
-		
-		// Scaffolding for Phase 1 scene management — not yet driving the loop.
-		// GameUpdater/RenderPipeline are still called directly by GamePanel/GameLoop;
-		// this just makes SceneManager available once the cutover happens.
-		SceneManager sceneManager = new SceneManager(new PlayingScene(gameSystem, renderPipeline));
-		
+		PlayingScene playingScene = new PlayingScene(gameSystem, renderPipeline);
+		SceneManager sceneManager = new SceneManager(playingScene);
+		PausedScene pausedScene = new PausedScene(audioService, sceneManager, playingScene);
+
+		GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline, audioService,
+				this::restartRun, sceneManager, playingScene, pausedScene);
+
 		ServiceLocator.register(InputManager.class, inputManager);
 		ServiceLocator.register(GameSystem.class, gameSystem);
 		ServiceLocator.register(DebugMetrics.class, debugMetrics);
