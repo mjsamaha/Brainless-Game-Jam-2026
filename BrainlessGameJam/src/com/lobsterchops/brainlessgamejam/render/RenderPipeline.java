@@ -21,9 +21,12 @@ public class RenderPipeline {
 	}
 
 	public void render(Graphics2D g2) {
+		// Render layers in the order defined by RenderLayer enum
 		for (RenderLayer layer : RenderLayer.getDrawOrder()) {
 			renderLayer(g2, layer);
 		}
+		
+		
 	}
 
 	private void renderLayer(Graphics2D g2, RenderLayer layer) {
@@ -32,6 +35,8 @@ public class RenderPipeline {
 			case ENTITIES -> renderEntities(g2);
 			case DEBUG -> renderDebugIfEnabled(g2);
 		}
+		
+	
 	}
 
 	private void renderEntities(Graphics2D g2) {
