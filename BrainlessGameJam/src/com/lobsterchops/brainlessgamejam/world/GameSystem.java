@@ -8,17 +8,23 @@ import com.lobsterchops.brainlessgamejam.config.GameLoopConfig;
 import com.lobsterchops.brainlessgamejam.entity.GameObject;
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
+import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 
 public class GameSystem {
 
 	private final List<GameObject> objects = new ArrayList<>();
 	private final List<GameObject> pendingObjects = new ArrayList<>();
+	private final CollisionSystem collisionSystem;
 
 	private GameState state = GameState.MENU;
 
 	private long tick;
 	private long elapsedMillis;
+
+	public GameSystem(EventBus eventBus) {
+		this.collisionSystem = new CollisionSystem(eventBus);
+	}
 
 	public void update() {
 		if (state != GameState.PLAYING) {
@@ -78,7 +84,7 @@ public class GameSystem {
 	}
 
 	private void updateSystems(UpdateContext context) {
-		// collision, enemyDeath, playerDeath, etc.
+		collisionSystem.resolve(objects);
 	}
 
 	private void endUpdate() {
@@ -116,6 +122,10 @@ public class GameSystem {
 		return elapsedMillis;
 	}
 
+	public CollisionSystem getCollisionSystem() {
+		return collisionSystem;
+	}
+ 
 	public List<GameObject> getObjects() {
 		return Collections.unmodifiableList(objects);
 	}
@@ -131,3 +141,4 @@ public class GameSystem {
 	}
 
 }
+ 

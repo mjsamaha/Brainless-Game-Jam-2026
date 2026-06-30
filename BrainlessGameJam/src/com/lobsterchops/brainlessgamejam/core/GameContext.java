@@ -3,22 +3,25 @@ package com.lobsterchops.brainlessgamejam.core;
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
 import com.lobsterchops.brainlessgamejam.audio.SoundType;
+import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.scene.GameUpdater;
+import com.lobsterchops.brainlessgamejam.scene.MenuScene;
 import com.lobsterchops.brainlessgamejam.scene.PausedScene;
 import com.lobsterchops.brainlessgamejam.scene.PlayingScene;
 import com.lobsterchops.brainlessgamejam.scene.SceneManager;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
-
 public class GameContext {
 	
 	public GameContext() {
 		
+		EventBus eventBus = new EventBus();
+
 		InputManager inputManager = new InputManager();
-		GameSystem gameSystem = new GameSystem();
+		GameSystem gameSystem = new GameSystem(eventBus);
 		DebugMetrics debugMetrics = new DebugMetrics();
 		
 		RenderPipeline renderPipeline = new RenderPipeline(gameSystem, debugMetrics);
@@ -33,6 +36,7 @@ public class GameContext {
 		GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline, audioService,
 				this::restartRun, sceneManager, playingScene, pausedScene);
 
+		ServiceLocator.register(EventBus.class, eventBus);
 		ServiceLocator.register(InputManager.class, inputManager);
 		ServiceLocator.register(GameSystem.class, gameSystem);
 		ServiceLocator.register(DebugMetrics.class, debugMetrics);
@@ -54,6 +58,7 @@ public class GameContext {
 	}
 	
 	public void restartRun() {
+		ServiceLocator.resolve(EventBus.class).clear();
 		ServiceLocator.resolve(GameSystem.class).clear();
 		setupNewRun();
 	}
