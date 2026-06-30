@@ -6,6 +6,11 @@ public enum RenderLayer {
 	
 	ENTITIES,
 	
-	DEBUG
-
+	DEBUG;
+	
+	private static final RenderLayer[] DRAW_ORDER = { BACKGROUND, ENTITIES, DEBUG };
+	
+	public static RenderLayer[] getDrawOrder() {
+		return DRAW_ORDER;
+	}
 }
