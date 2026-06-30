@@ -1,5 +1,6 @@
 package com.lobsterchops.brainlessgamejam.util;
 
+// Timer class for tracking elapsed time
 public class Timer {
 	
 	private long duration;
