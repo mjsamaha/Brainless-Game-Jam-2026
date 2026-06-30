@@ -1,0 +1,13 @@
+Project Template
+
+res/ folder
+- gfx 
+- sfx
+- audio
+- fonts
+
+
+
+- Rendering
+- Input Handling
+- Audio Management
