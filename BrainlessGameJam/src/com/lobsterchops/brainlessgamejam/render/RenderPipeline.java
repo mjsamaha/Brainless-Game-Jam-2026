@@ -21,7 +21,7 @@ public class RenderPipeline {
 	}
 
 	public void render(Graphics2D g2) {
-		for (RenderLayer layer : RenderLayer.drawOrder()) {
+		for (RenderLayer layer : RenderLayer.getDrawOrder()) {
 			renderLayer(g2, layer);
 		}
 	}

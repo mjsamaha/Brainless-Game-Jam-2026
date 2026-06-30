@@ -12,5 +12,5 @@ public enum RenderLayer {
 	
 	public static RenderLayer[] getDrawOrder() {
 		return DRAW_ORDER;
-	}
+	}	
 }
