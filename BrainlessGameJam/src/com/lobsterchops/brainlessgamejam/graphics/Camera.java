@@ -1,4 +1,4 @@
-package com.lobsterchops.brainlessgamejam.gfx;
+package com.lobsterchops.brainlessgamejam.graphics;
 
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.math.Bounds;

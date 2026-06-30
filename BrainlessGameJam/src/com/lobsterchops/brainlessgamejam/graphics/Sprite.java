@@ -1,4 +1,4 @@
-package com.lobsterchops.brainlessgamejam.gfx;
+package com.lobsterchops.brainlessgamejam.graphics;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
