@@ -6,6 +6,8 @@ public enum GameState {
 	
 	PLAYING,
 	
+	WAVE_COMPLETE,
+	
 	PAUSED,
 	
 	GAME_OVER

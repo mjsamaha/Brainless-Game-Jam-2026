@@ -13,7 +13,7 @@ public class Game {
 		this.window = buildWindow();
 		this.gamePanel = new GamePanel();
 		
-		window.add(gamePanel);
+		window.setContentPane(gamePanel);
 		window.pack();
 		window.setLocationRelativeTo(null);
 	}
@@ -26,7 +26,6 @@ public class Game {
 	
 	private static JFrame buildWindow() {
 		JFrame frame = new JFrame();
-		// title, year, version, game stage
 		frame.setTitle(Version.TITLE + " " + Version.YEAR + " - v" + Version.VERSION + " - " + Version.GAME_STAGE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);

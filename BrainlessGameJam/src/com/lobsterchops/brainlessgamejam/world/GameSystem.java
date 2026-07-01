@@ -50,6 +50,8 @@ public class GameSystem {
 	}
 
 	public void clear() {
+		objects.clear();
+		pendingObjects.clear();
 		tick = 0;
 		elapsedMillis = 0;
 		state = GameState.PLAYING;
@@ -96,7 +98,11 @@ public class GameSystem {
 	 * Private - object lifecycle
 	 */
 	private void flushPendingObjects() {
-		// Implementation to flush pending objects
+		if (pendingObjects.isEmpty())
+			return;
+		objects.addAll(pendingObjects);
+		pendingObjects.clear();
+
 	}
 
 	private void removeInactiveObjects() {
@@ -125,7 +131,7 @@ public class GameSystem {
 	public CollisionSystem getCollisionSystem() {
 		return collisionSystem;
 	}
- 
+
 	public List<GameObject> getObjects() {
 		return Collections.unmodifiableList(objects);
 	}
@@ -141,4 +147,3 @@ public class GameSystem {
 	}
 
 }
- 

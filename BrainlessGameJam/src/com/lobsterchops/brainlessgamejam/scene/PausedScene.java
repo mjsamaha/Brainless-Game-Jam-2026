@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
  
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
-import com.lobsterchops.brainlessgamejam.config.ColorConfig;
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
  
