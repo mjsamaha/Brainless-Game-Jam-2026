@@ -30,7 +30,6 @@ public class PlayingScene implements Scene {
 	public PlayingScene(GameSystem gameSystem, RenderPipeline renderPipeline) {
 		this.gameSystem = gameSystem;
 		this.renderPipeline = renderPipeline;
-
 	}
 
 	@Override

@@ -48,22 +48,13 @@ public class GameContext {
 	}
 	
 	public void setupNewRun() {
-		InputManager inputManager = ServiceLocator.resolve(InputManager.class);
 		GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
-
-
-		gameSystem.setState(GameState.PLAYING);
-
-
-
-		//audioService.playMusic(SoundType.GAMEPLAY_MUSIC);
+	    gameSystem.clear(); 
 	}
 	
 	public void restartRun() {
-		ServiceLocator.clear();
-		new GameContext();
-
-		ServiceLocator.resolve(GameSystem.class).clear();
-		setupNewRun();
+	    GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
+	    gameSystem.clear();
+	    setupNewRun();
 	}
 }
