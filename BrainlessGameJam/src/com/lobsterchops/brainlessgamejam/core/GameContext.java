@@ -4,10 +4,14 @@ import java.util.Random;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
+<<<<<<< main
 import com.lobsterchops.brainlessgamejam.entity.FriendlyEntity;
 import com.lobsterchops.brainlessgamejam.entity.ImposterEntity;
 import com.lobsterchops.brainlessgamejam.entity.PlayerEntity;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
+=======
+import com.lobsterchops.brainlessgamejam.audio.SoundType;
+>>>>>>> 91d3270 event bus implementation
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.math.Bounds;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
@@ -23,17 +27,22 @@ import com.lobsterchops.brainlessgamejam.world.Arena;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.TrailSystem;
 
+
 public class GameContext {
 	
 	private static final int INITIAL_FRIENDLIES = 5;
 	private static final int INITIAL_IMPOSTERS = 3;
 	
 	public GameContext() {
+<<<<<<< main
 
 		EventBus eventBus = new EventBus();
 
+=======
+		
+>>>>>>> 91d3270 event bus implementation
 		InputManager inputManager = new InputManager();
-		GameSystem gameSystem = new GameSystem(eventBus);
+		GameSystem gameSystem = new GameSystem();
 		DebugMetrics debugMetrics = new DebugMetrics();
 		Arena arena = new Arena();
 		TrailSystem trailSystem = new TrailSystem();
@@ -51,7 +60,6 @@ public class GameContext {
 		GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline, audioService,
 				this::restartRun, sceneManager, playingScene, pausedScene);
 
-		ServiceLocator.register(EventBus.class, eventBus);
 		ServiceLocator.register(InputManager.class, inputManager);
 		ServiceLocator.register(GameSystem.class, gameSystem);
 		ServiceLocator.register(DebugMetrics.class, debugMetrics);
@@ -85,9 +93,12 @@ public class GameContext {
 	}
 	
 	public void restartRun() {
+<<<<<<< main
 		ServiceLocator.clear();
 		new GameContext();
 		ServiceLocator.resolve(EventBus.class).clear();
+=======
+>>>>>>> 91d3270 event bus implementation
 		ServiceLocator.resolve(GameSystem.class).clear();
 		setupNewRun();
 	}
