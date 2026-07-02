@@ -1,13 +1,9 @@
 package com.lobsterchops.brainlessgamejam.core;
 
-import java.util.Random;
-
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
-import com.lobsterchops.brainlessgamejam.audio.SoundType;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
-import com.lobsterchops.brainlessgamejam.math.Bounds;
-import com.lobsterchops.brainlessgamejam.math.Vector2;
+
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.scene.GameUpdater;
@@ -19,9 +15,7 @@ import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
 
 public class GameContext {
-	
-	private static final int INITIAL_FRIENDLIES = 5;
-	private static final int INITIAL_IMPOSTERS = 3;
+
 	
 	public GameContext() {
 
@@ -72,17 +66,4 @@ public class GameContext {
 		ServiceLocator.resolve(GameSystem.class).clear();
 		setupNewRun();
 	}
-
-	private void spawnInitialSwarm(GameSystem gameSystem) {
-	    Random random = new Random();
-
-	
-	}
-
-	private Vector2 randomSpawnPosition(Random random, Bounds bounds) {
-		float x = bounds.x() + random.nextFloat() * bounds.width();
-		float y = bounds.y() + random.nextFloat() * bounds.height();
-		return new Vector2(x, y);
-	}
-
 }
