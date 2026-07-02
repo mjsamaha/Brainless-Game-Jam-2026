@@ -6,9 +6,8 @@ import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
-
 public class GameUpdater {
-
+	 
 	private final GameSystem gameSystem;
 	private final InputManager input;
 	private final RenderPipeline renderPipeline;
@@ -17,7 +16,7 @@ public class GameUpdater {
 	private final SceneManager sceneManager;
 	private final PlayingScene playingScene;
 	private final PausedScene pausedScene;
-
+ 
 	public GameUpdater(GameSystem gameSystem, InputManager input, RenderPipeline renderPipeline,
 			AudioService audioService, Runnable restartCallback,
 			SceneManager sceneManager, PlayingScene playingScene, PausedScene pausedScene) {
@@ -30,32 +29,35 @@ public class GameUpdater {
 		this.playingScene = playingScene;
 		this.pausedScene = pausedScene;
 	}
-
+ 
 	public void update() {
 		processCommands();
 		gameSystem.update();
 		audioService.update();
 	}
-
+ 
 	private void processCommands() {
 		Command command;
-
 		while ((command = input.pollCommand()) != null) {
 			switch (command) {
 				case TOGGLE_DEBUG -> renderPipeline.toggleDebug();
 				case TOGGLE_PAUSE -> togglePause();
+				case CONFIRM      -> handleConfirm();
 			}
 		}
 	}
-
+ 
 	private void togglePause() {
 		Scene current = sceneManager.getCurrentScene();
-
 		if (current == playingScene) {
 			sceneManager.switchTo(pausedScene);
 		} else if (current == pausedScene) {
 			pausedScene.unpause();
 		}
 	}
-
+ 
+	private void handleConfirm() {
+		// Phase 6: start game from menu, confirm on game over screen
+	}
+ 
 }
