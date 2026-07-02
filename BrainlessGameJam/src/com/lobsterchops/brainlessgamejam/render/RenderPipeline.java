@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
 import com.lobsterchops.brainlessgamejam.state.GameState;
-import com.lobsterchops.brainlessgamejam.world.Arena;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
 public class RenderPipeline {
@@ -13,27 +12,21 @@ public class RenderPipeline {
 	private final DebugRenderer debugRenderer = new DebugRenderer();
 	private final GameSystem gameSystem;
 	private final DebugMetrics debugMetrics;
-	
-	private final Arena arena;
-	private final TrailRenderer trailRenderer;
+
 	
 
 	private boolean debugMode = false;
 
-	public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics, Arena arena, TrailRenderer trailRenderer) {
+	public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics) {
 		this.gameSystem = gameSystem;
 		this.debugMetrics = debugMetrics;
-		this.arena = arena;
-		this.trailRenderer = trailRenderer;
+
 	}
 
 	public void render(Graphics2D g2) {
 		
 		backgroundRenderer.render(g2);
 		
-		arena.render(g2);
-		
-		trailRenderer.render(g2);
 		
 		renderLayer(g2, RenderLayer.ENTITIES);
 		

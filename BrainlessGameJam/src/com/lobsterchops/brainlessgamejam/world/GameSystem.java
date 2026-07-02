@@ -14,6 +14,7 @@ public class GameSystem {
 
 	private final List<GameObject> objects = new ArrayList<>();
 	private final List<GameObject> pendingObjects = new ArrayList<>();
+	
 
 	private GameState state = GameState.MENU;
 
@@ -122,13 +123,7 @@ public class GameSystem {
 		return elapsedMillis;
 	}
 
-<<<<<<< main
-	public CollisionSystem getCollisionSystem() {
-		return collisionSystem;
-	}
 
-=======
->>>>>>> 91d3270 event bus implementation
 	public List<GameObject> getObjects() {
 		return Collections.unmodifiableList(objects);
 	}
