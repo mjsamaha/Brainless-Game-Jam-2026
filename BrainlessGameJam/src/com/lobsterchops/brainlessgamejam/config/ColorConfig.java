@@ -9,20 +9,15 @@ public final class ColorConfig {
 	public static final Color WHITE = new Color(255, 255, 255);
 	public static final Color DARK_GREY = new Color(30, 30, 30);
 	
-	// Arena
-	public static final Color ARENA_BORDER = new Color(80, 80, 80);
-	public static final Color ARENA_BACKGROUND = new Color(15, 15, 15);
+	public static final Color GRASS       = new Color(86,  130, 3);
+	public static final Color GRASS_ALT   = new Color(100, 145, 10);
+	public static final Color ROAD        = new Color(80,  80,  80);
+	public static final Color ROAD_LINE   = new Color(200, 180, 0);
+	public static final Color WATER       = new Color(40,  100, 200);
+	public static final Color WATER_ALT   = new Color(30,  85,  180);
+
 	
-	// Player
-	public static final Color PLAYER_COLOR = new Color(255, 255, 255);
-	
-	// Swarm
-	public static final Color FRIENDLY = new Color(80, 200, 120);
-	public static final Color IMPOSTER = new Color(220, 60, 60);
-	
-	// Trail
-	public static final Color TRAIL_FRIENDLY = new Color(80, 200, 120, 180);
-	public static final Color TRAIL_IMPOSTER = new Color(220, 60, 60, 180);
+
 	
 	// Debug
 	public static final Color DEBUG_BG     = new Color(0, 0, 0, 120);

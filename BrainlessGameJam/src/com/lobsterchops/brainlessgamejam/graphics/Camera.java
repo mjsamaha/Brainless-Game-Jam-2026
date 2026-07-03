@@ -16,6 +16,8 @@ public class Camera {
 	private float shakeMagnitude = 0f;
 	private float shakeOffsetX = 0f;
 	private float shakeOffsetY = 0f;
+	
+	private float zoom = 1f;
 
 	/** Creates a camera sized to the full screen. */
 	public Camera() {
@@ -40,8 +42,8 @@ public class Camera {
 	 * @param worldY centre target, world Y in pixels
 	 */
 	public void follow(float worldX, float worldY) {
-		offsetX = worldX - viewWidth / ScreenConfig.CENTER_DIVISOR;
-		offsetY = worldY - viewHeight / ScreenConfig.CENTER_DIVISOR;
+	    offsetX = worldX - (viewWidth / zoom) / ScreenConfig.CENTER_DIVISOR;
+	    offsetY = worldY - (viewHeight / zoom) / ScreenConfig.CENTER_DIVISOR;
 	}
 
 	/** Convenience overload for {@link Vector2}. */
@@ -97,24 +99,20 @@ public class Camera {
 		shakeOffsetY = (float) (Math.cos(t * 0.41) * Math.sin(t * 0.67)) * shakeMagnitude;
 	}
 
-	/**
-	 * Converts a world X coordinate to a screen X coordinate.
-	 *
-	 * @param worldX X position in world space
-	 * @return X position in screen space
-	 */
 	public int toScreenX(float worldX) {
-		return (int) (worldX - offsetX + shakeOffsetX);
+	    return (int) ((worldX - offsetX + shakeOffsetX) * zoom);
 	}
 
-	/**
-	 * Converts a world Y coordinate to a screen Y coordinate.
-	 *
-	 * @param worldY Y position in world space
-	 * @return Y position in screen space
-	 */
 	public int toScreenY(float worldY) {
-		return (int) (worldY - offsetY + shakeOffsetY);
+	    return (int) ((worldY - offsetY + shakeOffsetY) * zoom);
+	}
+
+	public float getZoom() {
+	    return zoom;
+	}
+
+	public void setZoom(float zoom) {
+	    this.zoom = Math.max(0.1f, zoom); // guard against zero/negative
 	}
 
 	/**
@@ -155,5 +153,7 @@ public class Camera {
 	public boolean isShaking() {
 		return shakeRemainingNanos > 0L;
 	}
+	
+	
 
 }

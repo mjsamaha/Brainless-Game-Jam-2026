@@ -93,11 +93,10 @@ public class GameSystem {
 	 * Private - object lifecycle
 	 */
 	private void flushPendingObjects() {
-		if (pendingObjects.isEmpty())
-			return;
-		objects.addAll(pendingObjects);
-		pendingObjects.clear();
-
+	    if (!pendingObjects.isEmpty()) {
+	        objects.addAll(pendingObjects);
+	        pendingObjects.clear();
+	    }
 	}
 
 	private void removeInactiveObjects() {

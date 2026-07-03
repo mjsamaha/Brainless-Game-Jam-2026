@@ -1,67 +1,65 @@
 package com.lobsterchops.brainlessgamejam.render;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
+import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
 public class RenderPipeline {
 
-	private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-	private final DebugRenderer debugRenderer = new DebugRenderer();
-	private final GameSystem gameSystem;
-	private final DebugMetrics debugMetrics;
+	private final BackgroundRenderer backgroundRenderer;
+    private final DebugRenderer debugRenderer = new DebugRenderer();
+    private final GameSystem gameSystem;
+    private final DebugMetrics debugMetrics;
+    private final Camera camera;
 
-	
+    private boolean debugMode = false;
 
-	private boolean debugMode = false;
+    public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics, Camera camera) {
+        this.gameSystem = gameSystem;
+        this.debugMetrics = debugMetrics;
+        this.camera = camera;
+        this.backgroundRenderer = new BackgroundRenderer(camera);
+    }
 
-	public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics) {
-		this.gameSystem = gameSystem;
-		this.debugMetrics = debugMetrics;
+    public void render(Graphics2D g2) {
+        backgroundRenderer.render(g2);
+        renderEntities(g2);
 
-	}
+        if (gameSystem.getState() == GameState.PAUSED) {
+            // render paused screen
+        } else if (gameSystem.getState() == GameState.GAME_OVER) {
+            // render game over screen
+        }
 
-	public void render(Graphics2D g2) {
-		
-		backgroundRenderer.render(g2);
-		
-		
-		renderLayer(g2, RenderLayer.ENTITIES);
-		
-		if (gameSystem.getState() == GameState.PAUSED) {
-			// render paused screen
-		} else if (gameSystem.getState() == GameState.GAME_OVER) {
-			// render game over screen
-		}
-		
-		// debug
-		if (debugMode) {
-			debugRenderer.render(g2, gameSystem, debugMetrics);
-		}
+        if (debugMode) {
+            debugRenderer.render(g2, gameSystem, debugMetrics);
+        }
+    }
 
-	}
+    private void renderEntities(Graphics2D g2) {
+        AffineTransform saved = g2.getTransform();
 
-	private void renderLayer(Graphics2D g2, RenderLayer layer) {
-//		switch (layer) {
-//			case BACKGROUND -> backgroundRenderer.render(g2);
-//			case ENTITIES -> renderEntities(g2);
-//			case DEBUG -> renderDebugIfEnabled(g2);
-//		}
-		for (Renderable renderable : gameSystem.getRenderableObjects()) {
-			if (renderable.getRenderLayer() == layer) {
-				renderable.render(g2);
-			}
-		}
-	
-	}
+        g2.scale(camera.getZoom(), camera.getZoom());
+        g2.translate(-camera.getOffsetX(), -camera.getOffsetY());
 
-	public boolean isDebugEnabled() {
-		return debugMode;
-	}
+        for (Renderable renderable : gameSystem.getRenderableObjects()) {
+            if (renderable.getRenderLayer() == RenderLayer.ENTITIES) {
+                renderable.render(g2);
+            }
+        }
 
-	public void toggleDebug() {
-		debugMode = !debugMode;
-	}
+        g2.setTransform(saved);
+    }
+
+    public boolean isDebugEnabled() {
+        return debugMode;
+    }
+
+    public void toggleDebug() {
+        debugMode = !debugMode;
+    }
 }

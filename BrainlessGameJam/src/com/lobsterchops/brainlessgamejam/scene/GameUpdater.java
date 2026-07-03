@@ -1,6 +1,9 @@
 package com.lobsterchops.brainlessgamejam.scene;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
+import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
+import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
+import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.input.Command;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
@@ -32,6 +35,7 @@ public class GameUpdater {
  
 	public void update() {
 		processCommands();
+		followPlayer();
 		gameSystem.update();
 		audioService.update();
 	}
@@ -45,6 +49,15 @@ public class GameUpdater {
 				case CONFIRM      -> handleConfirm();
 			}
 		}
+	}
+	
+	private void followPlayer() {
+	    Camera camera = ServiceLocator.resolve(Camera.class);
+	    gameSystem.getObjects().stream()
+	        .filter(o -> o instanceof SlimeParent)
+	        .map(o -> (SlimeParent) o)
+	        .findFirst()
+	        .ifPresent(p -> camera.follow(p.getPosition()));
 	}
  
 	private void togglePause() {
