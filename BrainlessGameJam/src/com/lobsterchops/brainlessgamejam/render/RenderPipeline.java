@@ -7,10 +7,11 @@ import com.lobsterchops.brainlessgamejam.entity.Renderable;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
+import com.lobsterchops.brainlessgamejam.world.TileMap;
 
 public class RenderPipeline {
 
-	private final BackgroundRenderer backgroundRenderer;
+    private final TileMapRenderer tileMapRenderer;
     private final DebugRenderer debugRenderer = new DebugRenderer();
     private final GameSystem gameSystem;
     private final DebugMetrics debugMetrics;
@@ -18,22 +19,17 @@ public class RenderPipeline {
 
     private boolean debugMode = false;
 
-    public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics, Camera camera) {
+    public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics,
+                          Camera camera, TileMap tileMap) {
         this.gameSystem = gameSystem;
         this.debugMetrics = debugMetrics;
         this.camera = camera;
-        this.backgroundRenderer = new BackgroundRenderer(camera);
+        this.tileMapRenderer = new TileMapRenderer(tileMap, camera);
     }
 
     public void render(Graphics2D g2) {
-        backgroundRenderer.render(g2);
+        tileMapRenderer.render(g2);
         renderEntities(g2);
-
-        if (gameSystem.getState() == GameState.PAUSED) {
-            // render paused screen
-        } else if (gameSystem.getState() == GameState.GAME_OVER) {
-            // render game over screen
-        }
 
         if (debugMode) {
             debugRenderer.render(g2, gameSystem, debugMetrics);
@@ -53,6 +49,12 @@ public class RenderPipeline {
         }
 
         g2.setTransform(saved);
+    }
+
+    private void renderDebugIfEnabled(Graphics2D g2) {
+        if (debugMode) {
+            debugRenderer.render(g2, gameSystem, debugMetrics);
+        }
     }
 
     public boolean isDebugEnabled() {
