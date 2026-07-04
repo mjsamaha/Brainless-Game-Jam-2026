@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform;
 
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
-import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
 
@@ -30,10 +29,7 @@ public class RenderPipeline {
     public void render(Graphics2D g2) {
         tileMapRenderer.render(g2);
         renderEntities(g2);
-
-        if (debugMode) {
-            debugRenderer.render(g2, gameSystem, debugMetrics);
-        }
+        renderDebugIfEnabled(g2);
     }
 
     private void renderEntities(Graphics2D g2) {
