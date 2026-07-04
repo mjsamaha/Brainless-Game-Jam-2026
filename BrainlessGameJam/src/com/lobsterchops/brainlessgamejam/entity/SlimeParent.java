@@ -5,15 +5,20 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
+import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;
+import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.AssetManager;
 import com.lobsterchops.brainlessgamejam.graphics.Gfx;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
+import com.lobsterchops.brainlessgamejam.math.Bounds;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
 import com.lobsterchops.brainlessgamejam.render.RenderLayer;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
+import com.lobsterchops.brainlessgamejam.world.TileType;
 
 public class SlimeParent extends Entity {
 
@@ -55,6 +60,8 @@ public class SlimeParent extends Entity {
         super.update(context); // applies velocity → position
  
         clampToWorld();
+        applyLogRiding(context);
+        checkWater(context);
  
         // Record position AFTER clamping so children never chase an out-of-bounds point
         positionHistory.addFirst(getPosition());
@@ -73,9 +80,51 @@ public class SlimeParent extends Entity {
         float maxY = tileMap.worldHeight() - halfH;
         setPosition(getPosition().clamp(minX, minY, maxX, maxY));
     }
+    
+    private Log applyLogRiding(UpdateContext context) {
+    	Log ridden = findRiddenLog(context);
+    	if (ridden != null) {
+    		Vector2 pos = getPosition();
+    		setPosition(new Vector2(pos.x() + ridden.getSpeed(), pos.y()));
+    	}
+    	return ridden;
+    }
+    
+    /**
+     * If standing in water with no log underneath, publish EntityDestroyed
+     * so PlayingScene can trigger game over.
+     */
+    private void checkWater(UpdateContext context) {
+        if (!isInWater()) return;
+        if (findRiddenLog(context) != null) return; // safe — on a log
+ 
+        // In bare water — game over
+        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
+        eventBus.publish(new EntityDestroyed(this));
+    }
+ 
+    private Log findRiddenLog(UpdateContext context) {
+        Bounds myBounds = getBounds();
+        List<GameObject> objects = context.gameSystem().getObjects();
+        for (GameObject obj : objects) {
+            if (obj instanceof Log log && log.isActive()) {
+                if (log.getBounds().intersects(myBounds)) {
+                    return log;
+                }
+            }
+        }
+        return null;
+    }
+    
+    private boolean isInWater() {
+        TileMap tileMap = ServiceLocator.resolve(TileMap.class);
+        int col = (int) (getPosition().x() / TileMap.TILE_SIZE);
+        int row = (int) (getPosition().y() / TileMap.TILE_SIZE);
+        return tileMap.get(col, row) == TileType.WATER;
+    }
  
     private void updateFacing(Vector2 direction) {
-        if (direction.equals(Vector2.ZERO)) return; // no input — hold last facing
+        if (direction.equals(Vector2.ZERO)) return;
  
         if (Math.abs(direction.x()) >= Math.abs(direction.y())) {
             facing = direction.x() > 0 ? Direction.RIGHT : Direction.LEFT;
@@ -99,5 +148,4 @@ public class SlimeParent extends Entity {
     public RenderLayer getRenderLayer() {
         return RenderLayer.ENTITIES;
     }
-
 }

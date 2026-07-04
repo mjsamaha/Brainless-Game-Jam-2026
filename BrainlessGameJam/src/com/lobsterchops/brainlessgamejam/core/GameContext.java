@@ -16,8 +16,9 @@ import com.lobsterchops.brainlessgamejam.scene.PlayingScene;
 import com.lobsterchops.brainlessgamejam.scene.SceneManager;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
-import com.lobsterchops.brainlessgamejam.world.TileMap;
+import com.lobsterchops.brainlessgamejam.world.RiverLayout;
 import com.lobsterchops.brainlessgamejam.world.RoadLayout;
+import com.lobsterchops.brainlessgamejam.world.TileMap;
 
 public class GameContext {
 
@@ -60,11 +61,14 @@ public class GameContext {
 	public void setupNewRun() {
 	    TileMap tileMap = ServiceLocator.resolve(TileMap.class);
 	    GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
+	    
+	    gameSystem.clear();
 
 	    gameSystem.setState(GameState.PLAYING);
 
 	    float startX = tileMap.worldWidth()  / 2f;
 	    float startY = tileMap.worldHeight() - TileMap.TILE_SIZE * 1.5f; 
+	    
 	    SlimeParent mama = new SlimeParent(new Vector2(startX, startY));
 	    gameSystem.addObject(mama);
 	    
@@ -74,6 +78,9 @@ public class GameContext {
 	    
 	    RoadLayout roadLayout = new RoadLayout(tileMap);
 	    roadLayout.spawnCars(1, gameSystem);
+	    
+	    RiverLayout riverLayout = new RiverLayout(tileMap);
+	    riverLayout.spawnLogs(1, gameSystem);
 	}
 
 	public void restartRun() {
