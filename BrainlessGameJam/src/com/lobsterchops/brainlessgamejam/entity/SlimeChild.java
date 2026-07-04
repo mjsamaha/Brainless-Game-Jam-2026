@@ -89,5 +89,9 @@ public class SlimeChild extends Entity {
     public RenderLayer getRenderLayer() {
         return RenderLayer.ENTITIES;
     }
+    
+    public int getHistoryOffset() {
+    	return historyOffset;
+    }
 }
  

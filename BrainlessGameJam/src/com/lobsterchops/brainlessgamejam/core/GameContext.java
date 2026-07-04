@@ -8,7 +8,6 @@ import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
-import com.lobsterchops.brainlessgamejam.render.BackgroundRenderer;
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.scene.GameUpdater;
@@ -18,6 +17,7 @@ import com.lobsterchops.brainlessgamejam.scene.SceneManager;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
+import com.lobsterchops.brainlessgamejam.world.RoadLayout;
 
 public class GameContext {
 
@@ -38,7 +38,7 @@ public class GameContext {
 	    AudioService audioService = new JavaSoundAudioService();
 	    audioService.init();
 
-	    PlayingScene playingScene = new PlayingScene(gameSystem, renderPipeline);
+	    PlayingScene playingScene = new PlayingScene(gameSystem, renderPipeline, eventBus);
 	    SceneManager sceneManager = new SceneManager(playingScene);
 	    PausedScene pausedScene = new PausedScene(audioService, sceneManager, playingScene);
 
@@ -71,6 +71,9 @@ public class GameContext {
 	    for (int i = 0; i < SlimeChild.NUM_CHILDREN; i++) {
 	    	gameSystem.addObject(new SlimeChild(i, mama.getPositionHistory()));
 	    }
+	    
+	    RoadLayout roadLayout = new RoadLayout(tileMap);
+	    roadLayout.spawnCars(1, gameSystem);
 	}
 
 	public void restartRun() {
