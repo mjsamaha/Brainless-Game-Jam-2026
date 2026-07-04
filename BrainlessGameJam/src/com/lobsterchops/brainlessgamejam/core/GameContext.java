@@ -2,6 +2,7 @@ package com.lobsterchops.brainlessgamejam.core;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
+import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
 import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
@@ -64,7 +65,12 @@ public class GameContext {
 
 	    float startX = tileMap.worldWidth()  / 2f;
 	    float startY = tileMap.worldHeight() - TileMap.TILE_SIZE * 1.5f; 
-	    gameSystem.addObject(new SlimeParent(new Vector2(startX, startY)));
+	    SlimeParent mama = new SlimeParent(new Vector2(startX, startY));
+	    gameSystem.addObject(mama);
+	    
+	    for (int i = 0; i < SlimeChild.NUM_CHILDREN; i++) {
+	    	gameSystem.addObject(new SlimeChild(i, mama.getPositionHistory()));
+	    }
 	}
 
 	public void restartRun() {

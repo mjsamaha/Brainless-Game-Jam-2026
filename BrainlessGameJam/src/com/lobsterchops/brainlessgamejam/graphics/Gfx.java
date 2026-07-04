@@ -13,6 +13,12 @@ public final class Gfx {
     public static final String TILE_ROAD_WHITE_STRIP  = "/gfx/tiles/tile-road-white.png";
     public static final String TILE_ROAD_YELLOW_STRIP = "/gfx/tiles/tile-road-yellow-strip.png";
     public static final String TILE_WATER             = "/gfx/tiles/tile-water.png";
+    
+    // Slime child sprites
+    public static final String SLIME_CHILD_UP    = "/gfx/slime-child-up.png";
+    public static final String SLIME_CHILD_DOWN  = "/gfx/slime-child-down.png";
+    public static final String SLIME_CHILD_LEFT  = "/gfx/slime-child-left.png";
+    public static final String SLIME_CHILD_RIGHT = "/gfx/slime-child-right.png";
 	
 	private Gfx() {
 		
