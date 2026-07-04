@@ -132,6 +132,7 @@ public class SlimeParent extends Entity {
             facing = direction.y() > 0 ? Direction.DOWN : Direction.UP;
         }
     }
+    
  
     @Override
     public void render(Graphics2D g2) {

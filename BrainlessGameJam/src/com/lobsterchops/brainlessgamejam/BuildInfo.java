@@ -1,5 +1,7 @@
 package com.lobsterchops.brainlessgamejam;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,15 +24,20 @@ public class BuildInfo {
 	}
 	
 	private static String resolveGitHash() {
-		try {
-			Process process = Runtime.getRuntime().exec("git rev-parse --short HEAD");
-			process.waitFor();
-			byte[] output = process.getInputStream().readAllBytes();
-			
-			return new String(output).trim();
-		} catch (Exception e) {
-			return "unknown";
-		}
+	    try {
+	        ProcessBuilder pb = new ProcessBuilder("git", "rev-parse", "--short", "HEAD");
+	        Process process = pb.start();
+
+	        try (var reader = new BufferedReader(
+	                new InputStreamReader(process.getInputStream()))) {
+	            String line = reader.readLine();
+	            process.waitFor();
+	            return line != null ? line.trim() : "unknown";
+	        }
+
+	    } catch (Exception e) {
+	        return "unknown";
+	    }
 	}
 
 }
