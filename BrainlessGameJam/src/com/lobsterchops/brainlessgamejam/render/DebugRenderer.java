@@ -36,7 +36,10 @@ public class DebugRenderer {
         return List.of(
             new DebugLine(null, Version.TITLE + " " + Version.YEAR + " v" + Version.VERSION),
             DebugLine.BLANK,
-            new DebugLine("fps", String.format("%3d", metrics.getFps()))
+            new DebugLine("fps", String.format("%3d", metrics.getFps())),
+            
+            // draw game stage
+            new DebugLine("stage", Version.GAME_STAGE_ENUM.getDisplayName())
         );
     }
 
