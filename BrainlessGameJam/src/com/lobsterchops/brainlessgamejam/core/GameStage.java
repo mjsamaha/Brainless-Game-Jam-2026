@@ -23,4 +23,8 @@ public enum GameStage {
     public String getVersionSuffix() {
         return versionSuffix;
     }
+    
+    public String getFullVersionTag() {
+        return displayName + " (" + versionSuffix + ")";
+    }
 }

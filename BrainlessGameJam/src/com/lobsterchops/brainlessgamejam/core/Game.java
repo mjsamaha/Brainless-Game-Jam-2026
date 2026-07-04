@@ -25,14 +25,11 @@ public class Game {
 	}
 
 	private static JFrame buildWindow() {
-		JFrame frame = new JFrame();
-		frame.setTitle(
-			    Version.TITLE + " " + Version.YEAR +
-			    " - v" + Version.VERSION + Version.GAME_STAGE_ENUM.getVersionSuffix()
-			);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		return frame;
+	    JFrame frame = new JFrame();
+	    frame.setTitle(Version.getWindowTitle());
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setResizable(false);
+	    return frame;
 	}
 
 }
