@@ -1,5 +1,6 @@
 package com.lobsterchops.brainlessgamejam.audio;
 
+
 import java.util.Objects;
 
 public record SoundDefinition(

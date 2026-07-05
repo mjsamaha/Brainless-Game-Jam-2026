@@ -1,5 +1,6 @@
 package com.lobsterchops.brainlessgamejam.audio;
 
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -25,12 +26,12 @@ public class JavaSoundAudioService implements AudioService {
 
 	private static final Logger LOGGER = Logger.getLogger(JavaSoundAudioService.class.getName());
 
-	private final Map<SoundType, SoundDefinition> catalog;
-	private final Map<SoundType, Deque<Clip>> activeSfx = new EnumMap<>(SoundType.class);
+	private final Map<AudioType, SoundDefinition> catalog;
+	private final Map<AudioType, Deque<Clip>> activeSfx = new EnumMap<>(AudioType.class);
 	private final Set<Clip> pausedClips = Collections.newSetFromMap(new IdentityHashMap<Clip, Boolean>());
 
 	private Clip currentMusicClip;
-	private SoundType currentMusicType;
+	private AudioType currentMusicType;
 
 	private float masterVolume = 1.0f;
 	private float musicVolume = 1.0f;
@@ -43,9 +44,9 @@ public class JavaSoundAudioService implements AudioService {
 		this(AudioCatalog.definitions());
 	}
 
-	public JavaSoundAudioService(Map<SoundType, SoundDefinition> catalog) {
+	public JavaSoundAudioService(Map<AudioType, SoundDefinition> catalog) {
 		Objects.requireNonNull(catalog, "catalog must not be null");
-		EnumMap<SoundType, SoundDefinition> copied = new EnumMap<>(SoundType.class);
+		EnumMap<AudioType, SoundDefinition> copied = new EnumMap<>(AudioType.class);
 		copied.putAll(catalog);
 		this.catalog = copied;
 	}
@@ -80,7 +81,7 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	@Override
-	public synchronized void playSfx(SoundType type) {
+	public synchronized void playSfx(AudioType type) {
 		ensureInitialized();
 
 		SoundDefinition def = findDef(type);
@@ -104,12 +105,12 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	@Override
-	public synchronized void playMusic(SoundType type) {
+	public synchronized void playMusic(AudioType type) {
 		playMusic(type, false);
 	}
 
 	@Override
-	public synchronized void playMusic(SoundType type, boolean restartIfSameTrack) {
+	public synchronized void playMusic(AudioType type, boolean restartIfSameTrack) {
 		ensureInitialized();
 
 		SoundDefinition def = findDef(type);
@@ -179,7 +180,7 @@ public class JavaSoundAudioService implements AudioService {
 			pausedClips.remove(currentMusicClip);
 		}
 
-		for (Map.Entry<SoundType, Deque<Clip>> entry : activeSfx.entrySet()) {
+		for (Map.Entry<AudioType, Deque<Clip>> entry : activeSfx.entrySet()) {
 			SoundDefinition def = findDef(entry.getKey());
 			if (def == null) continue;
 			for (Clip clip : entry.getValue()) {
@@ -226,7 +227,7 @@ public class JavaSoundAudioService implements AudioService {
 		return sfxVolume;
 	}
 
-	private SoundDefinition findDef(SoundType type) {
+	private SoundDefinition findDef(AudioType type) {
 		if (type == null) {
 			LOGGER.warning("type must not be null");
 			return null;
@@ -260,7 +261,7 @@ public class JavaSoundAudioService implements AudioService {
 			}
 		}
 
-		for (Map.Entry<SoundType, Deque<Clip>> entry : activeSfx.entrySet()) {
+		for (Map.Entry<AudioType, Deque<Clip>> entry : activeSfx.entrySet()) {
 			SoundDefinition def = findDef(entry.getKey());
 			if (def == null) continue;
 			float effective = masterVolume * sfxVolume * def.baseVolume();
@@ -281,10 +282,10 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private void cleanupFinishedSfx() {
-		Iterator<Map.Entry<SoundType, Deque<Clip>>> mapIt = activeSfx.entrySet().iterator();
+		Iterator<Map.Entry<AudioType, Deque<Clip>>> mapIt = activeSfx.entrySet().iterator();
 
 		while (mapIt.hasNext()) {
-			Map.Entry<SoundType, Deque<Clip>> entry = mapIt.next();
+			Map.Entry<AudioType, Deque<Clip>> entry = mapIt.next();
 			Deque<Clip> clips = entry.getValue();
 
 			Iterator<Clip> clipIt = clips.iterator();

@@ -27,16 +27,6 @@ public class PausedScene implements Scene {
 	}
  
 	@Override
-	public void enter() {
-		audioService.pauseAll();
-	}
- 
-	@Override
-	public void exit() {
-		audioService.resumeAll();
-	}
- 
-	@Override
 	public void update(UpdateContext context) {
 		// Nothing ticks while paused.
 	}

@@ -1,8 +1,8 @@
 package com.lobsterchops.brainlessgamejam.core;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
+import com.lobsterchops.brainlessgamejam.audio.AudioType;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
-import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
 import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
@@ -68,6 +68,10 @@ public class GameContext {
         ServiceLocator.register(TileMap.class,       tileMap);
         ServiceLocator.register(ScoreSystem.class,   scoreSystem);
         ServiceLocator.register(WaveManager.class,   waveManager);
+        
+        audioService.playMusic(AudioType.GAMEPLAY_MUSIC);
+
+        
     }
  
     public void setupNewRun() {
@@ -75,8 +79,14 @@ public class GameContext {
         GameSystem  gameSystem  = ServiceLocator.resolve(GameSystem.class);
         ScoreSystem scoreSystem = ServiceLocator.resolve(ScoreSystem.class);
         WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
+        AudioService audioService = ServiceLocator.resolve(AudioService.class);
  
         gameSystem.setState(GameState.PLAYING);
+        
+        // play gameplay music
+        audioService.playMusic(AudioType.GAMEPLAY_MUSIC);
+        
+
  
         // Reset scoring and wave state for a clean run
         scoreSystem.reset();
@@ -95,4 +105,3 @@ public class GameContext {
         setupNewRun();
     }
 }
- 
