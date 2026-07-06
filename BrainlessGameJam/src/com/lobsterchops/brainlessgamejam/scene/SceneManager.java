@@ -18,7 +18,7 @@ public class SceneManager {
 	private Scene currentScene;
  
 	public SceneManager(Scene initialScene) {
-		switchTo(initialScene);
+	    if (initialScene != null) switchTo(initialScene);
 	}
  
 	public void switchTo(Scene nextScene) {

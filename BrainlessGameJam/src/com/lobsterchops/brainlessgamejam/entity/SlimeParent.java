@@ -22,6 +22,8 @@ import com.lobsterchops.brainlessgamejam.world.TileMap;
 import com.lobsterchops.brainlessgamejam.world.TileType;
  
 public class SlimeParent extends Entity {
+	
+	private boolean isDead = false;
  
     private static final float SIZE  = 32f;
     private static final float SPEED = 3f;
@@ -29,7 +31,8 @@ public class SlimeParent extends Entity {
     private static final int DRAW_WIDTH  = 64;
     private static final int DRAW_HEIGHT = 32;
  
-    static final int MAX_HISTORY = (SlimeChild.NUM_CHILDREN + 1) * SlimeChild.DELAY;
+    static final int MAX_HISTORY = 50 * SlimeChild.DELAY; // supports up to 49 children
+
  
     // The Y threshold below which the parent is considered to have crossed safely.
     // One full tile from the top of the map is enough margin.
@@ -57,14 +60,21 @@ public class SlimeParent extends Entity {
     public SlimeParent(Vector2 position) {
         super(position, SIZE, SIZE);
         
-        GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
-        for (int i = 0; i < SlimeChild.NUM_CHILDREN; i++) {
-			gameSystem.addObject(new SlimeChild(i, positionHistory));
-		}
     }
  
     public LinkedList<Vector2> getPositionHistory() {
         return positionHistory;
+    }
+    
+    public void clearPositionHistory() {
+		positionHistory.clear();
+	}
+    
+    public void initPositionHistory() {
+        positionHistory.clear();
+        for (int i = 0; i < MAX_HISTORY; i++) {
+            positionHistory.add(getPosition());
+        }
     }
  
     /**
@@ -86,6 +96,7 @@ public class SlimeParent extends Entity {
         clampToWorld();
         applyLogRiding(context);
         checkWater(context);
+        checkCarCollision(context);
         checkCrossing(context);
  
         // Record position AFTER clamping so children never chase an out-of-bounds point
@@ -94,6 +105,23 @@ public class SlimeParent extends Entity {
             positionHistory.removeLast();
         }
     }
+    
+    private void checkCarCollision(UpdateContext context) {
+        if (isDead) return;
+        Bounds myBounds = getBounds();
+        for (GameObject obj : context.gameSystem().getObjects()) {
+            if (obj instanceof Car car && car.isActive()) {
+                if (car.getBounds().intersects(myBounds)) {
+                    isDead = true;
+                    EventBus eventBus = ServiceLocator.resolve(EventBus.class);
+                    eventBus.publish(new EntityDestroyed(this));
+                    return;
+                }
+            }
+        }
+    }
+    
+    
 
  
     /**
@@ -145,11 +173,13 @@ public class SlimeParent extends Entity {
     }
  
     private void checkWater(UpdateContext context) {
-        if (!isInWater()) return;
-        if (findRiddenLog(context) != null) return;
- 
-        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-        eventBus.publish(new EntityDestroyed(this));
+//        if (isDead) return;
+//        if (!isInWater()) return;
+//        if (findRiddenLog(context) != null) return;
+//
+//        isDead = true;
+//        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
+//        eventBus.publish(new EntityDestroyed(this));
     }
  
     private Log findRiddenLog(UpdateContext context) {

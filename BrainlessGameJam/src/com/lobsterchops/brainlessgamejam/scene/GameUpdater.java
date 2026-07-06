@@ -3,6 +3,7 @@ package com.lobsterchops.brainlessgamejam.scene;
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
+import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.input.Command;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
@@ -19,10 +20,13 @@ public class GameUpdater {
     private final SceneManager sceneManager;
     private final PlayingScene playingScene;
     private final PausedScene pausedScene;
+    private final MenuScene     menuScene;
+    private final GameOverScene gameOverScene;
 
     public GameUpdater(GameSystem gameSystem, InputManager input, RenderPipeline renderPipeline,
             AudioService audioService, Runnable restartCallback,
-            SceneManager sceneManager, PlayingScene playingScene, PausedScene pausedScene) {
+            SceneManager sceneManager, PlayingScene playingScene,
+            PausedScene pausedScene, MenuScene menuScene, GameOverScene gameOverScene) {
         this.gameSystem = gameSystem;
         this.input = input;
         this.renderPipeline = renderPipeline;
@@ -31,12 +35,17 @@ public class GameUpdater {
         this.sceneManager = sceneManager;
         this.playingScene = playingScene;
         this.pausedScene = pausedScene;
+        this.menuScene     = menuScene;
+        this.gameOverScene = gameOverScene;
     }
 
     public void update() {
-        processCommands();
+    	processCommands();
         followPlayer();
-        gameSystem.update();
+
+        UpdateContext context = UpdateContext.fixed(gameSystem, gameSystem.getTick(), gameSystem.getElapsedMillis());
+        sceneManager.update(context);
+
         audioService.update();
     }
 
@@ -51,7 +60,6 @@ public class GameUpdater {
 
     private void processCommands() {
         Command command;
-
         while ((command = input.pollCommand()) != null) {
             switch (command) {
                 case TOGGLE_DEBUG -> renderPipeline.toggleDebug();
@@ -62,7 +70,7 @@ public class GameUpdater {
 
     private void togglePause() {
         Scene current = sceneManager.getCurrentScene();
-
+        if (current == menuScene || current == gameOverScene) return;
         if (current == playingScene) {
             sceneManager.switchTo(pausedScene);
         } else if (current == pausedScene) {

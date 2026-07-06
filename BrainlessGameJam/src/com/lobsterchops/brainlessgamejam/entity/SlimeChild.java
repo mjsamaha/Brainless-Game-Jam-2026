@@ -18,6 +18,8 @@ import com.lobsterchops.brainlessgamejam.world.TileMap;
 import com.lobsterchops.brainlessgamejam.world.TileType;
  
 public class SlimeChild extends Entity {
+	
+	private boolean isDead = false;
  
     public static final int NUM_CHILDREN = 5;
     public static final int DELAY = 8;
@@ -41,7 +43,7 @@ public class SlimeChild extends Entity {
     private Direction facing = Direction.DOWN;
  
     public SlimeChild(int index, LinkedList<Vector2> positionHistory) {
-        super(Vector2.ZERO, SIZE, SIZE);
+    	super(positionHistory.isEmpty() ? Vector2.ZERO : positionHistory.get(Math.min((index + 1) * DELAY, positionHistory.size() - 1)), SIZE, SIZE);
         this.historyOffset = (index + 1) * DELAY;
         this.positionHistory = positionHistory;
     }
@@ -82,11 +84,14 @@ public class SlimeChild extends Entity {
      * PlayingScene's loseLastChild() handles which child actually disappears.
      */
     private void checkWater(UpdateContext context) {
-        if (!isInWater()) return;
-        if (findRiddenLog(context) != null) return;
- 
-        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-        eventBus.publish(new EntityDestroyed(this));
+//        if (isDead) return;
+//        if (!isInWater()) return;
+//        if (findRiddenLog(context) != null) return;
+//
+//        isDead = true;
+//        markInactive();
+//        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
+//        eventBus.publish(new EntityDestroyed(this));
     }
  
     private Log findRiddenLog(UpdateContext context) {

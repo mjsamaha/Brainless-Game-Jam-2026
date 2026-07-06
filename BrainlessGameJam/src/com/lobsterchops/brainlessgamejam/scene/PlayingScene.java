@@ -32,6 +32,6 @@ public class PlayingScene implements Scene {
  
     @Override
     public void render(Graphics2D g2) {
-        renderPipeline.render(g2);
+        renderPipeline.renderWorld(g2);
     }
 }

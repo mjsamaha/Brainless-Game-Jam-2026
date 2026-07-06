@@ -47,8 +47,7 @@ public class HudRenderer {
     private static final int DOT_RADIUS          = 7;
     private static final int DOT_GAP             = 5;
     private static final int DOT_MARGIN_X        = 16;
-    private static final int MAX_DISPLAYED_CHILDREN = 8;
-
+    private static final int MAX_DISPLAYED_CHILDREN = 20;
  
     private static final Color BAR_BG         = new Color(10,  10,  16,  210);
     private static final Color BAR_BORDER      = new Color(255, 255, 255, 25);
@@ -235,7 +234,9 @@ public class HudRenderer {
         // Score delta sub-line
         int    delta     = score.getLastCrossingDelta();
         String deltaText = (delta >= 0 ? "+" : "") + delta + " pts";
-        if (score.wasLastCrossingPerfect()) deltaText += "  \u2605 Perfect!";
+        if (score.wasLastCrossingPerfect()) deltaText += " !";
+        //         if (score.wasLastCrossingPerfect()) deltaText += "  \u2605 Perfect!";
+
  
         g2.setFont(FONT_BANNER_SUB);
         FontMetrics subFm = g2.getFontMetrics();

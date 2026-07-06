@@ -2,7 +2,6 @@ package com.lobsterchops.brainlessgamejam.audio;
 
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class AudioCatalog {
@@ -18,7 +17,10 @@ public final class AudioCatalog {
 		// register(defs, SoundType.NAVIGATION_CLICK,
 		// SoundDefinition.sfx("/audio/click.wav", 0.75f, 3));
 		
-		register(defs, AudioType.SPLASH_MENU_MUSIC, SoundDefinition.music("/audio/preloader_music.wav", 1.0f));
+		register(defs, AudioType.GAMEPLAY_MUSIC, SoundDefinition.music("/audio/preloader_music.wav", 1.0f));
+
+		
+
 		
 		
 

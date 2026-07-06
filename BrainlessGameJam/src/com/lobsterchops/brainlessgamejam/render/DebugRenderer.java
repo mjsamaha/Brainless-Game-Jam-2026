@@ -33,14 +33,18 @@ public class DebugRenderer {
 	}
 
 	private List<DebugLine> buildLeftLines(DebugMetrics metrics) {
-		return List.of(
-				
-				new DebugLine(null, Version.getDebugTitle()),
+	    return List.of(
+	            new DebugLine(null, Version.getDebugTitle()),
 
-				DebugLine.BLANK, new DebugLine("fps", String.format("%3d", metrics.getFps())),
+	            DebugLine.BLANK, new DebugLine("fps", String.format("%3d", metrics.getFps())),
 
-				// draw game stage
-				new DebugLine("stage", Version.GAME_STAGE_ENUM.getDisplayName()));
+	            // draw game stage
+	            new DebugLine("stage", Version.GAME_STAGE_ENUM.getDisplayName()),
+
+	            DebugLine.BLANK,
+	            new DebugLine(null, "Developed by LobsterChops"),
+	            new DebugLine(null, "Brainless Game Jam 2026"),
+	            new DebugLine(null, "Java & AWT/Swing"));
 	}
 
 	private List<DebugLine> buildRightLines(GameSystem gameSystem) {
@@ -54,7 +58,7 @@ public class DebugRenderer {
 				new DebugLine(null, System.getProperty("os.name") + " " + System.getProperty("os.version")),
 				new DebugLine(null, System.getProperty("os.arch")),
 				new DebugLine(null,
-						"Java " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")"),
+						"Java " + System.getProperty("java.version")),
 				DebugLine.BLANK,
 
 				// CPU
