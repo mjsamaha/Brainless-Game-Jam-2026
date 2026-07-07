@@ -5,14 +5,13 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
- 
+
 import com.lobsterchops.brainlessgamejam.config.ColorConfig;
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.event.GameOverEvent;
-import com.lobsterchops.brainlessgamejam.input.Command;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.util.FontLoader;
 import com.lobsterchops.brainlessgamejam.world.ScoreSystem;

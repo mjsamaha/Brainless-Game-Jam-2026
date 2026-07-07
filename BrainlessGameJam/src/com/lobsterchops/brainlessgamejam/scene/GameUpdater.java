@@ -1,6 +1,7 @@
 package com.lobsterchops.brainlessgamejam.scene;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
+import com.lobsterchops.brainlessgamejam.config.GameLoopConfig;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
@@ -40,17 +41,19 @@ public class GameUpdater {
     }
 
     public void update() {
-    	processCommands();
+        processCommands();
         followPlayer();
-
         UpdateContext context = UpdateContext.fixed(gameSystem, gameSystem.getTick(), gameSystem.getElapsedMillis());
         sceneManager.update(context);
-
         audioService.update();
     }
 
     private void followPlayer() {
         Camera camera = ServiceLocator.resolve(Camera.class);
+ 
+        // Tick the shake animation every frame using the fixed interval
+        camera.update((long) GameLoopConfig.DRAW_INTERVAL_NANOS);
+ 
         gameSystem.getObjects().stream()
                 .filter(o -> o instanceof SlimeParent)
                 .map(o -> (SlimeParent) o)
@@ -67,7 +70,7 @@ public class GameUpdater {
             }
         }
     }
-
+ 
     private void togglePause() {
         Scene current = sceneManager.getCurrentScene();
         if (current == menuScene || current == gameOverScene) return;

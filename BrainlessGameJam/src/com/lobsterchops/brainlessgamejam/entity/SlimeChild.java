@@ -5,10 +5,8 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
- 
+
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
-import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;
-import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.AssetManager;
 import com.lobsterchops.brainlessgamejam.graphics.Gfx;
 import com.lobsterchops.brainlessgamejam.math.Bounds;

@@ -6,11 +6,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import com.lobsterchops.brainlessgamejam.audio.AudioService;
+import com.lobsterchops.brainlessgamejam.audio.AudioType;
 import com.lobsterchops.brainlessgamejam.config.ColorConfig;
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
-import com.lobsterchops.brainlessgamejam.input.Command;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
 import com.lobsterchops.brainlessgamejam.util.FontLoader;
 import com.lobsterchops.brainlessgamejam.world.ScoreSystem;
@@ -67,6 +68,8 @@ public class MenuScene implements Scene {
 		tick++;
 		InputManager input = ServiceLocator.resolve(InputManager.class);
 		if (input.wasConfirmPressed()) {
+			AudioService audioService = ServiceLocator.resolve(AudioService.class);
+			audioService.playSfx(AudioType.MENU_CONFIRM_SFX);
 			startCallback.run();
 			sceneManager.switchTo(playingScene);
 		}

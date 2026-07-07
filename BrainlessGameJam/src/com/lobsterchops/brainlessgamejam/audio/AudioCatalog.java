@@ -15,9 +15,13 @@ public final class AudioCatalog {
 
 		// register sounds here when you have assets:
 		// register(defs, SoundType.NAVIGATION_CLICK,
-		// SoundDefinition.sfx("/audio/click.wav", 0.75f, 3));
+		// SoundDefinition.sfx("/audio/click.wav", 0.75f, 3
 		
-		register(defs, AudioType.GAMEPLAY_MUSIC, SoundDefinition.music("/audio/preloader_music.wav", 1.0f));
+		register(defs, AudioType.GAMEPLAY_MUSIC, SoundDefinition.music("/audio/preloader_music.wav", 0.50f));
+		
+		register(defs, AudioType.MENU_CONFIRM_SFX, SoundDefinition.sfx("/audio/selection.wav", 1.0f, 3));
+		
+		register(defs, AudioType.COLLISION_SFX, SoundDefinition.sfx("/audio/entity_collision.wav", 1.0f, 3));
 
 		
 

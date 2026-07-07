@@ -8,11 +8,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
- 
+
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
-import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.util.FontLoader;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
@@ -48,6 +47,9 @@ public class HudRenderer {
     private static final int DOT_GAP             = 5;
     private static final int DOT_MARGIN_X        = 16;
     private static final int MAX_DISPLAYED_CHILDREN = 20;
+    
+    private static final Color LIVES_VALUE = new Color(255, 100, 100);  // soft red
+    private static final Color LIVES_LABEL = new Color(190,  70,  70);  // muted red
  
     private static final Color BAR_BG         = new Color(10,  10,  16,  210);
     private static final Color BAR_BORDER      = new Color(255, 255, 255, 25);
@@ -107,7 +109,32 @@ public class HudRenderer {
  
         renderChildDots(g2, gameSystem, wave);
         renderWaveIndicator(g2, wave.getCurrentWave());
+        renderLivesIndicator(g2, score.getLives());
         renderScoreIndicator(g2, score.getScore());
+    }
+    
+    private void renderLivesIndicator(Graphics2D g2, int lives) {
+        // Positioned between WAVE (centre) and SCORE (right edge)
+        final int centreX = ScreenConfig.WIDTH * 3 / 4;
+        final int centreY = BAR_HEIGHT / 2;
+
+        String label = "LIVES";
+        String value = String.valueOf(lives);
+
+        g2.setFont(FONT_LABEL);
+        int labelW = g2.getFontMetrics().stringWidth(label);
+
+        g2.setFont(FONT_VALUE);
+        FontMetrics valueFm = g2.getFontMetrics();
+
+        int gap    = 6;
+        int blockW = labelW + gap + valueFm.stringWidth(value);
+        int blockX = centreX - blockW / 2;
+
+        int baseline = centreY + valueFm.getAscent() / 2 - 2;
+
+        drawShadowedString(g2, FONT_LABEL, LIVES_LABEL, label, blockX,             baseline);
+        drawShadowedString(g2, FONT_VALUE, LIVES_VALUE, value, blockX + labelW + gap, baseline);
     }
  
     private void renderChildDots(Graphics2D g2, GameSystem gameSystem, WaveManager wave) {

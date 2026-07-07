@@ -17,7 +17,6 @@ import com.lobsterchops.brainlessgamejam.scene.MenuScene;
 import com.lobsterchops.brainlessgamejam.scene.PausedScene;
 import com.lobsterchops.brainlessgamejam.scene.PlayingScene;
 import com.lobsterchops.brainlessgamejam.scene.SceneManager;
-import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.RiverLayout;
 import com.lobsterchops.brainlessgamejam.world.RoadLayout;
@@ -56,7 +55,6 @@ public class GameContext {
         MenuScene     menuScene     = new MenuScene(sceneManager, playingScene, this::setupNewRun);
         GameOverScene gameOverScene = new GameOverScene(sceneManager, menuScene, this::setupNewRun, eventBus);
         PausedScene   pausedScene   = new PausedScene(audioService, sceneManager, playingScene);
-        sceneManager.switchTo(menuScene);
         
         
 
@@ -81,6 +79,8 @@ public class GameContext {
         ServiceLocator.register(MenuScene.class,    menuScene);
         ServiceLocator.register(GameOverScene.class, gameOverScene);
         
+        sceneManager.switchTo(menuScene);
+
 
         
     }
