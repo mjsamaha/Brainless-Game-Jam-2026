@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
- 
+
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.Direction;
 import com.lobsterchops.brainlessgamejam.entity.Entity;
@@ -23,6 +23,7 @@ import com.lobsterchops.brainlessgamejam.math.Vector2;
 import com.lobsterchops.brainlessgamejam.render.RenderLayer;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
+import com.lobsterchops.brainlessgamejam.world.WaveManager;
 import com.lobsterchops.brainlessgamejam.world.common.TileType;
  
 public class SlimeParent extends Entity {
@@ -160,10 +161,11 @@ public class SlimeParent extends Entity {
         // "All alive" means every child is still present — WaveManager set
         // waveStartChildCount, but we don't have a direct reference here.
         // We compare against NUM_CHILDREN (the chain always starts full).
+        WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
         boolean allAlive = childrenAlive == SlimeChild.NUM_CHILDREN;
  
         EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-        eventBus.publish(new CrossingCompleted(childrenAlive, allAlive));
+        eventBus.publish(new CrossingCompleted(childrenAlive, allAlive, waveManager.getCurrentWave()));
     }
  
     private int countLivingChildren(GameSystem gameSystem) {

@@ -13,10 +13,20 @@ import com.lobsterchops.brainlessgamejam.event.GameOverEvent;
 
 public class ScoreSystem {
 
+	// Constants for scoring and lives
 	private static final int POINTS_PER_CHILD = 100;
+	
+	// Bonus points for a perfect crossing (all children alive)
 	private static final int PERFECT_BONUS = 500;
-	private static int MAX_LIVES = 10;
-	private static int WAVE_COMPLETE_BONUS_LIVES = 2;
+	
+	// Starting number of lives for the player
+	private static final int STARTING_LIVES = 10;
+	
+	// Bonus lives awarded for completing a wave
+	private static final int WAVE_COMPLETE_BONUS_LIVES = 3;
+	
+	// Wave number threshold for awarding extra lives
+	private static final int LATE_WAVE_THRESHOLD = 3;
 
 	private int score;
 	private int highScore;
@@ -47,17 +57,26 @@ public class ScoreSystem {
 	}
 
 	private void onCrossingCompleted(CrossingCompleted event) {
-		int delta = event.childrenAlive() * POINTS_PER_CHILD;
-		if (event.allAlive()) {
-			delta += PERFECT_BONUS;
-		}
-		score += delta;
-		lastCrossingDelta = delta;
-		lastCrossingWasPerfect = event.allAlive();
-		
-		MAX_LIVES += event.childrenAlive() / 2; // Increase max lives based on children alive
-		// unless we add+= WAVE_COMPLETE_BONUS_LIVES
-		
+	    applyScoreReward(event);
+	    applyLivesReward(event);
+	}
+
+	private void applyScoreReward(CrossingCompleted event) {
+	    int delta = event.childrenAlive() * POINTS_PER_CHILD;
+	    if (event.allAlive()) {
+	        delta += PERFECT_BONUS;
+	    }
+	    score += delta;
+	    lastCrossingDelta = delta;
+	    lastCrossingWasPerfect = event.allAlive();
+	}
+
+	private void applyLivesReward(CrossingCompleted event) {
+	    if (event.waveNumber() >= LATE_WAVE_THRESHOLD) {
+	        lives += WAVE_COMPLETE_BONUS_LIVES * 2 + event.childrenAlive();
+	    } else {
+	        lives += WAVE_COMPLETE_BONUS_LIVES;
+	    }
 	}
 
 	private void onEntityDestroyed(EntityDestroyed event) {
@@ -102,9 +121,9 @@ public class ScoreSystem {
 	}
 
 	public void reset() {
-		score = 0;
-		lives = MAX_LIVES;
-		lastCrossingDelta = 0;
-		lastCrossingWasPerfect = false;
+	    score = 0;
+	    lives = STARTING_LIVES;  
+	    lastCrossingDelta = 0;
+	    lastCrossingWasPerfect = false;
 	}
 }
