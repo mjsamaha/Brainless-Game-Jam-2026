@@ -26,6 +26,8 @@ public final class Gfx {
 //    public static final String CAR_ORANGE = "/gfx/cars/car-orange.png";
 //    public static final String CAR_PURPLE = "/gfx/cars/car-purple.png";
 //    public static final String CAR_GREEN  = "/gfx/cars/car-green.png";
+    
+    // TODO: Log sprites
 	
 	private Gfx() {
 		

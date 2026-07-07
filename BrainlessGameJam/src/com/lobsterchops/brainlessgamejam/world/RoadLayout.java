@@ -4,7 +4,7 @@ package com.lobsterchops.brainlessgamejam.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lobsterchops.brainlessgamejam.entity.Car;
+import com.lobsterchops.brainlessgamejam.entity.entities.Car;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
  
 public class RoadLayout {

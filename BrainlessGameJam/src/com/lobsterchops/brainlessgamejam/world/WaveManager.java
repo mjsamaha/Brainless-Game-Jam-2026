@@ -1,8 +1,8 @@
 package com.lobsterchops.brainlessgamejam.world;
 
-import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
-import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeParent;
 import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.event.WaveCompleted;
@@ -14,8 +14,8 @@ public class WaveManager {
 	
 	private int currentChildCount = SlimeChild.NUM_CHILDREN;
 
-
 	public static final long INTER_WAVE_DELAY_MS = 3_000L;
+
 
 	private final GameSystem gameSystem;
 	private final EventBus eventBus;
@@ -161,7 +161,7 @@ public class WaveManager {
 
 	private int countLivingChildren() {
 		return (int) gameSystem.getObjects().stream()
-				.filter(o -> o instanceof com.lobsterchops.brainlessgamejam.entity.SlimeChild && o.isActive()).count();
+				.filter(o -> o instanceof com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild && o.isActive()).count();
 	}
 	
 	public int getCurrentChildCount() {

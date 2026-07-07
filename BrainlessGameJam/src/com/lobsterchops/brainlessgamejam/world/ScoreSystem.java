@@ -1,10 +1,10 @@
 package com.lobsterchops.brainlessgamejam.world;
 
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
-import com.lobsterchops.brainlessgamejam.entity.Car;
 import com.lobsterchops.brainlessgamejam.entity.GameObject;
-import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
-import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
+import com.lobsterchops.brainlessgamejam.entity.entities.Car;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeParent;
 import com.lobsterchops.brainlessgamejam.event.CollisionEvent;
 import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;

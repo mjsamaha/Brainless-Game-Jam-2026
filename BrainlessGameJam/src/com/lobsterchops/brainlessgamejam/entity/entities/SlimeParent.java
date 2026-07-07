@@ -1,4 +1,4 @@
-package com.lobsterchops.brainlessgamejam.entity;
+package com.lobsterchops.brainlessgamejam.entity.entities;
 
 
 import java.awt.Graphics2D;
@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
  
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
+import com.lobsterchops.brainlessgamejam.entity.Direction;
+import com.lobsterchops.brainlessgamejam.entity.Entity;
+import com.lobsterchops.brainlessgamejam.entity.GameObject;
+import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
 import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;
 import com.lobsterchops.brainlessgamejam.event.EventBus;

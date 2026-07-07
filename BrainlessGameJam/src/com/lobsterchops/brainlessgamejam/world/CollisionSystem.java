@@ -5,7 +5,7 @@ import java.util.List;
  
 import com.lobsterchops.brainlessgamejam.entity.Collidable;
 import com.lobsterchops.brainlessgamejam.entity.GameObject;
-import com.lobsterchops.brainlessgamejam.entity.Log;
+import com.lobsterchops.brainlessgamejam.entity.entities.Log;
 import com.lobsterchops.brainlessgamejam.event.CollisionEvent;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
  

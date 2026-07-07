@@ -3,8 +3,8 @@ package com.lobsterchops.brainlessgamejam.world;
 
 import java.util.ArrayList;
 import java.util.List;
- 
-import com.lobsterchops.brainlessgamejam.entity.Log;
+
+import com.lobsterchops.brainlessgamejam.entity.entities.Log;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
  
 public class RiverLayout {

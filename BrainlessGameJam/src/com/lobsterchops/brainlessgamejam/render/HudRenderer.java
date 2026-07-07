@@ -11,7 +11,7 @@ import java.awt.RenderingHints;
 
 import com.lobsterchops.brainlessgamejam.config.ScreenConfig;
 import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
-import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild;
 import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.util.FontLoader;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;

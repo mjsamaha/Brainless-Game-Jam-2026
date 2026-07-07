@@ -3,8 +3,8 @@ package com.lobsterchops.brainlessgamejam.core;
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.AudioType;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
-import com.lobsterchops.brainlessgamejam.entity.SlimeChild;
-import com.lobsterchops.brainlessgamejam.entity.SlimeParent;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild;
+import com.lobsterchops.brainlessgamejam.entity.entities.SlimeParent;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
@@ -24,94 +24,90 @@ import com.lobsterchops.brainlessgamejam.world.ScoreSystem;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
 import com.lobsterchops.brainlessgamejam.world.WaveManager;
 
-
 public class GameContext {
- 
-    public GameContext() {
- 
-        EventBus      eventBus      = new EventBus();
-        InputManager  inputManager  = new InputManager();
-        GameSystem    gameSystem    = new GameSystem(eventBus);
-        DebugMetrics  debugMetrics  = new DebugMetrics();
- 
-        Camera camera = new Camera();
-        camera.setZoom(1.5f);
- 
-        TileMap tileMap = TileMap.load("/maps/map.txt");
- 
-        RenderPipeline renderPipeline = new RenderPipeline(gameSystem, debugMetrics, camera, tileMap);
- 
-        AudioService audioService = new JavaSoundAudioService();
-        audioService.init();
- 
-        ScoreSystem  scoreSystem  = new ScoreSystem(eventBus);
-        RoadLayout   roadLayout   = new RoadLayout(tileMap);
-        RiverLayout  riverLayout  = new RiverLayout(tileMap);
-        WaveManager  waveManager  = new WaveManager(gameSystem, eventBus, tileMap,
-                                                     roadLayout, riverLayout);
- 
-        PlayingScene  playingScene  = new PlayingScene(gameSystem, renderPipeline);
-        SceneManager  sceneManager  = new SceneManager(null); // temp null, switchTo called below
-        MenuScene     menuScene     = new MenuScene(sceneManager, playingScene, this::setupNewRun);
-        GameOverScene gameOverScene = new GameOverScene(sceneManager, menuScene, this::setupNewRun, eventBus);
-        PausedScene   pausedScene   = new PausedScene(audioService, sceneManager, playingScene);
-        
-        
 
- 
-        GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline,
-                audioService, this::restartRun, sceneManager, playingScene, pausedScene, menuScene, gameOverScene);
- 
-        // Register all services
-        ServiceLocator.register(EventBus.class,      eventBus);
-        ServiceLocator.register(InputManager.class,  inputManager);
-        ServiceLocator.register(GameSystem.class,    gameSystem);
-        ServiceLocator.register(DebugMetrics.class,  debugMetrics);
-        ServiceLocator.register(RenderPipeline.class, renderPipeline);
-        ServiceLocator.register(AudioService.class,  audioService);
-        ServiceLocator.register(GameUpdater.class,   updater);
-        ServiceLocator.register(SceneManager.class,  sceneManager);
-        ServiceLocator.register(Camera.class,        camera);
-        ServiceLocator.register(TileMap.class,       tileMap);
-        ServiceLocator.register(ScoreSystem.class,   scoreSystem);
-        ServiceLocator.register(WaveManager.class,   waveManager);
-        
-        ServiceLocator.register(MenuScene.class,    menuScene);
-        ServiceLocator.register(GameOverScene.class, gameOverScene);
-        
-        sceneManager.switchTo(menuScene);
+	public GameContext() {
 
+		EventBus eventBus = new EventBus();
+		InputManager inputManager = new InputManager();
+		GameSystem gameSystem = new GameSystem(eventBus);
+		DebugMetrics debugMetrics = new DebugMetrics();
 
-        
-    }
- 
-    public void setupNewRun() {
-        TileMap      tileMap      = ServiceLocator.resolve(TileMap.class);
-        GameSystem   gameSystem   = ServiceLocator.resolve(GameSystem.class);
-        ScoreSystem  scoreSystem  = ServiceLocator.resolve(ScoreSystem.class);
-        WaveManager  waveManager  = ServiceLocator.resolve(WaveManager.class);
-        AudioService audioService = ServiceLocator.resolve(AudioService.class);
+		Camera camera = new Camera();
+		camera.setZoom(1.5f);
 
-        gameSystem.clear();
-        audioService.playMusic(AudioType.GAMEPLAY_MUSIC);
-        scoreSystem.reset();
+		TileMap tileMap = TileMap.load("/maps/map.txt");
 
-        float startX = tileMap.worldWidth()  / 2f;
-        float startY = tileMap.worldHeight() - TileMap.TILE_SIZE * 1.5f;
-        SlimeParent parent = new SlimeParent(new Vector2(startX, startY));
-        parent.initPositionHistory();
-        gameSystem.addObject(parent);
+		RenderPipeline renderPipeline = new RenderPipeline(gameSystem, debugMetrics, camera, tileMap);
 
-        waveManager.reset(); // ← moved up, resets currentChildCount to NUM_CHILDREN
+		AudioService audioService = new JavaSoundAudioService();
+		audioService.init();
 
-        for (int i = 0; i < waveManager.getCurrentChildCount(); i++) {
-            gameSystem.addObject(new SlimeChild(i, parent.getPositionHistory()));
-        }
-        
-    }
+		ScoreSystem scoreSystem = new ScoreSystem(eventBus);
+		RoadLayout roadLayout = new RoadLayout(tileMap);
+		RiverLayout riverLayout = new RiverLayout(tileMap);
+		WaveManager waveManager = new WaveManager(gameSystem, eventBus, tileMap, roadLayout, riverLayout);
 
- 
-    public void restartRun() {
-        setupNewRun();
-    }
+		PlayingScene playingScene = new PlayingScene(gameSystem, renderPipeline);
+		SceneManager sceneManager = new SceneManager(null); // temp null, switchTo called below
+		MenuScene menuScene = new MenuScene(sceneManager, playingScene, this::setupNewRun);
+		GameOverScene gameOverScene = new GameOverScene(sceneManager, menuScene, this::setupNewRun, eventBus);
+		PausedScene pausedScene = new PausedScene(audioService, sceneManager, playingScene);
+
+		GameUpdater updater = new GameUpdater(gameSystem, inputManager, renderPipeline, audioService, this::restartRun,
+				sceneManager, playingScene, pausedScene, menuScene, gameOverScene);
+
+		// Register all services
+		ServiceLocator.register(EventBus.class, eventBus);
+		ServiceLocator.register(InputManager.class, inputManager);
+		ServiceLocator.register(GameSystem.class, gameSystem);
+		ServiceLocator.register(DebugMetrics.class, debugMetrics);
+		ServiceLocator.register(RenderPipeline.class, renderPipeline);
+		ServiceLocator.register(AudioService.class, audioService);
+		ServiceLocator.register(GameUpdater.class, updater);
+		ServiceLocator.register(SceneManager.class, sceneManager);
+		ServiceLocator.register(Camera.class, camera);
+		ServiceLocator.register(TileMap.class, tileMap);
+		ServiceLocator.register(ScoreSystem.class, scoreSystem);
+		ServiceLocator.register(WaveManager.class, waveManager);
+
+		ServiceLocator.register(MenuScene.class, menuScene);
+		ServiceLocator.register(GameOverScene.class, gameOverScene);
+
+		sceneManager.switchTo(menuScene);
+
+	}
+
+	public void setupNewRun() {
+		TileMap tileMap = ServiceLocator.resolve(TileMap.class);
+		GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
+		ScoreSystem scoreSystem = ServiceLocator.resolve(ScoreSystem.class);
+		WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
+		AudioService audioService = ServiceLocator.resolve(AudioService.class);
+
+		gameSystem.clear();
+		audioService.playMusic(AudioType.GAMEPLAY_MUSIC);
+		scoreSystem.reset();
+
+		float startX = tileMap.worldWidth() / 2f;
+		float startY = tileMap.worldHeight() - TileMap.TILE_SIZE * 1.5f;
+		SlimeParent parent = new SlimeParent(new Vector2(startX, startY));
+		parent.initPositionHistory();
+		gameSystem.addObject(parent);
+
+		waveManager.reset(); // ← moved up, resets currentChildCount to NUM_CHILDREN
+
+		addParentSlime(gameSystem, waveManager, parent);
+
+	}
+
+	private void addParentSlime(GameSystem gameSystem, WaveManager waveManager, SlimeParent parent) {
+		for (int i = 0; i < waveManager.getCurrentChildCount(); i++) {
+			gameSystem.addObject(new SlimeChild(i, parent.getPositionHistory()));
+		}
+	}
+
+	public void restartRun() {
+		setupNewRun();
+	}
 }
