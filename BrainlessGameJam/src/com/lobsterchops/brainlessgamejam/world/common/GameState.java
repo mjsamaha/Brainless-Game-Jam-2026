@@ -1,4 +1,4 @@
-package com.lobsterchops.brainlessgamejam.state;
+package com.lobsterchops.brainlessgamejam.world.common;
 
 public enum GameState {
 	

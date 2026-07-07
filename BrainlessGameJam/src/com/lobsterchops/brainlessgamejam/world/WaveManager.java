@@ -7,8 +7,8 @@ import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.event.WaveCompleted;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
-import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.util.Timer;
+import com.lobsterchops.brainlessgamejam.world.common.GameState;
 
 public class WaveManager {
 	

@@ -1,4 +1,4 @@
-package com.lobsterchops.brainlessgamejam.world;
+package com.lobsterchops.brainlessgamejam.world.common;
 
 import com.lobsterchops.brainlessgamejam.graphics.Gfx;
 

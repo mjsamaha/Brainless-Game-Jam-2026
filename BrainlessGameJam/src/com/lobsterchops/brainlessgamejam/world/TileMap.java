@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.lobsterchops.brainlessgamejam.world.common.TileType;
+
 public class TileMap {
 
     private static final Logger LOGGER = Logger.getLogger(TileMap.class.getName());

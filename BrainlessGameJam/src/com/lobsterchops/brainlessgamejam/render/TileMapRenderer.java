@@ -10,7 +10,7 @@ import com.lobsterchops.brainlessgamejam.graphics.AssetManager;
 import com.lobsterchops.brainlessgamejam.graphics.Camera;
 import com.lobsterchops.brainlessgamejam.math.Bounds;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
-import com.lobsterchops.brainlessgamejam.world.TileType;
+import com.lobsterchops.brainlessgamejam.world.common.TileType;
 
 public class TileMapRenderer {
 

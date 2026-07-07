@@ -9,7 +9,7 @@ import com.lobsterchops.brainlessgamejam.entity.GameObject;
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
 import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
-import com.lobsterchops.brainlessgamejam.state.GameState;
+import com.lobsterchops.brainlessgamejam.world.common.GameState;
 
 public class GameSystem {
 

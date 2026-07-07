@@ -23,7 +23,7 @@ import com.lobsterchops.brainlessgamejam.math.Vector2;
 import com.lobsterchops.brainlessgamejam.render.RenderLayer;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 import com.lobsterchops.brainlessgamejam.world.TileMap;
-import com.lobsterchops.brainlessgamejam.world.TileType;
+import com.lobsterchops.brainlessgamejam.world.common.TileType;
  
 public class SlimeParent extends Entity {
 	

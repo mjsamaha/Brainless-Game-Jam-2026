@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.lobsterchops.brainlessgamejam.entity.entities.Car;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
+import com.lobsterchops.brainlessgamejam.world.common.TileType;
  
 public class RoadLayout {
  
