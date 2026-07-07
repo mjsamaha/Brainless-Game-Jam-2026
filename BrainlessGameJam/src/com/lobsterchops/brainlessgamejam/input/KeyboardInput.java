@@ -11,6 +11,8 @@ import com.lobsterchops.brainlessgamejam.math.Vector2;
 
 
 public class KeyboardInput implements KeyListener {
+	
+	private boolean confirmPressed = false;
  
     private final EnumMap<InputAction, Boolean> actions =
             new EnumMap<>(InputAction.class);
@@ -25,6 +27,13 @@ public class KeyboardInput implements KeyListener {
                     KeyEvent.VK_A, InputAction.MOVE_LEFT,
                     KeyEvent.VK_D, InputAction.MOVE_RIGHT
             );
+    
+    
+    public boolean wasConfirmPressed() {
+        boolean val = confirmPressed;
+        confirmPressed = false;
+        return val;
+    }
  
     public KeyboardInput() {
         for (InputAction action : InputAction.values()) {
@@ -44,7 +53,7 @@ public class KeyboardInput implements KeyListener {
         switch (code) {
             case KeyEvent.VK_ESCAPE -> commands.offer(Command.TOGGLE_PAUSE);
             case KeyEvent.VK_F3     -> commands.offer(Command.TOGGLE_DEBUG);
-            case KeyEvent.VK_ENTER  -> commands.offer(Command.CONFIRM);
+            case KeyEvent.VK_ENTER -> confirmPressed = true;
         }
     }
  

@@ -1,60 +1,61 @@
 package com.lobsterchops.brainlessgamejam.render;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
+import com.lobsterchops.brainlessgamejam.core.ServiceLocator;
 import com.lobsterchops.brainlessgamejam.entity.Renderable;
-import com.lobsterchops.brainlessgamejam.state.GameState;
+import com.lobsterchops.brainlessgamejam.graphics.Camera;
+import com.lobsterchops.brainlessgamejam.scene.SceneManager;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
+import com.lobsterchops.brainlessgamejam.world.TileMap;
 
 public class RenderPipeline {
 
-	private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
+	private final TileMapRenderer tileMapRenderer;
 	private final DebugRenderer debugRenderer = new DebugRenderer();
+	private final HudRenderer hudRenderer = new HudRenderer();
 	private final GameSystem gameSystem;
 	private final DebugMetrics debugMetrics;
-
-	
+	private final Camera camera;
 
 	private boolean debugMode = false;
 
-	public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics) {
+	public RenderPipeline(GameSystem gameSystem, DebugMetrics debugMetrics, Camera camera, TileMap tileMap) {
 		this.gameSystem = gameSystem;
 		this.debugMetrics = debugMetrics;
-
+		this.camera = camera;
+		this.tileMapRenderer = new TileMapRenderer(tileMap, camera);
 	}
 
 	public void render(Graphics2D g2) {
-		
-		backgroundRenderer.render(g2);
-		
-		
-		renderLayer(g2, RenderLayer.ENTITIES);
-		
-		if (gameSystem.getState() == GameState.PAUSED) {
-			// render paused screen
-		} else if (gameSystem.getState() == GameState.GAME_OVER) {
-			// render game over screen
-		}
-		
-		// debug
+		SceneManager sceneManager = ServiceLocator.resolve(SceneManager.class);
+		sceneManager.render(g2);
+
 		if (debugMode) {
 			debugRenderer.render(g2, gameSystem, debugMetrics);
 		}
-
 	}
 
-	private void renderLayer(Graphics2D g2, RenderLayer layer) {
-//		switch (layer) {
-//			case BACKGROUND -> backgroundRenderer.render(g2);
-//			case ENTITIES -> renderEntities(g2);
-//			case DEBUG -> renderDebugIfEnabled(g2);
-//		}
+	public void renderWorld(Graphics2D g2) {
+		tileMapRenderer.render(g2);
+		renderEntities(g2);
+		hudRenderer.render(g2);
+	}
+
+	private void renderEntities(Graphics2D g2) {
+		AffineTransform saved = g2.getTransform();
+
+		g2.scale(camera.getZoom(), camera.getZoom());
+		g2.translate(-camera.getOffsetX(), -camera.getOffsetY());
+
 		for (Renderable renderable : gameSystem.getRenderableObjects()) {
-			if (renderable.getRenderLayer() == layer) {
+			if (renderable.getRenderLayer() == RenderLayer.ENTITIES) {
 				renderable.render(g2);
 			}
 		}
-	
+
+		g2.setTransform(saved);
 	}
 
 	public boolean isDebugEnabled() {

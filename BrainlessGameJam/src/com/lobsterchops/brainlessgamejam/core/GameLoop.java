@@ -1,17 +1,13 @@
 package com.lobsterchops.brainlessgamejam.core;
 
-import java.util.logging.Logger;
-
 import com.lobsterchops.brainlessgamejam.config.GameLoopConfig;
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.util.FpsCounter;
 
 public class GameLoop {
 	
-	private static final Logger LOGGER = Logger.getLogger(GameLoop.class.getName());
-	
-	private Runnable updateTick;
-	private Runnable requestRepaint;
+	private final Runnable updateTick;
+	private final Runnable requestRepaint;
 	
 	private final DebugMetrics debugMetrics;
 	private final FpsCounter fpsCounter = new FpsCounter();
@@ -33,26 +29,40 @@ public class GameLoop {
 	        long elapsed = currentTime - lastTime;
 	        lastTime = currentTime;
 
-	        delta += calculateDelta(elapsed);
+	        delta = updateGame(delta, elapsed);
+	        updateDebug(elapsed);
+	        sleepUntilNextFrame(currentTime);
+	    }
+	}
+	
+	private double updateGame(double delta, long elapsed) {
+	    delta += calculateDelta(elapsed);
 
-	        processUpdates(delta);
-	        delta %= 1;
+	    processUpdates(delta);
 
-	        fpsCounter.frame(elapsed);
-	        updateFpsIfNeeded();
+	    return delta % 1;
+	}
 
-	        // Sleep for remaining frame time
-	        long frameEnd = System.nanoTime();
-	        long frameElapsed = frameEnd - currentTime;
-	        long sleepNanos = (long) GameLoopConfig.DRAW_INTERVAL - frameElapsed;
+	private void updateDebug(long elapsed) {
+	    fpsCounter.frame(elapsed);
+	    updateFpsIfNeeded();
+	}
 
-	        if (sleepNanos > 0) {
-	            try {
-	                Thread.sleep(sleepNanos / 1_000_000, (int) (sleepNanos % 1_000_000));
-	            } catch (InterruptedException e) {
-	                Thread.currentThread().interrupt();
-	            }
-	        }
+	private void sleepUntilNextFrame(long frameStart) {
+	    long frameElapsed = System.nanoTime() - frameStart;
+	    long sleepNanos = (long) GameLoopConfig.DRAW_INTERVAL - frameElapsed;
+
+	    if (sleepNanos <= 0) {
+	        return;
+	    }
+
+	    try {
+	        Thread.sleep(
+	            sleepNanos / 1_000_000,
+	            (int) (sleepNanos % 1_000_000)
+	        );
+	    } catch (InterruptedException e) {
+	        Thread.currentThread().interrupt();
 	    }
 	}
 	
@@ -73,7 +83,6 @@ public class GameLoop {
 	        int fps = fpsCounter.consumeFps();
 	        debugMetrics.setFps(fps);
 	        System.out.println(String.format("FPS: %3d", fps));
-	        LOGGER.fine(String.format("FPS: %3d", fps));
 	    }
 	}
 

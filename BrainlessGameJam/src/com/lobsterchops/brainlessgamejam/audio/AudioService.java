@@ -9,11 +9,11 @@ public interface AudioService {
 	
 	void update();
 	
-	void playSfx(SoundType type);
+	void playSfx(AudioType type);
 	
-	void playMusic(SoundType type);
+	void playMusic(AudioType type);
 	
-	void playMusic(SoundType type, boolean restartIfSameTrack);
+	void playMusic(AudioType type, boolean restartIfSameTrack);
 	
 	void stopMusic();
 	
@@ -34,3 +34,4 @@ public interface AudioService {
 	float getSfxVolume();
 	
 }
+ 

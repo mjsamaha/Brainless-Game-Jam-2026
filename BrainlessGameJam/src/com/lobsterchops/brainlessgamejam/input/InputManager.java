@@ -23,6 +23,8 @@ public class InputManager {
 
         component.requestFocusInWindow();
     }
+    
+
 
     public Vector2 movementDirection() {
 
@@ -33,6 +35,11 @@ public class InputManager {
 
         return mouse.getMousePosition();
     }
+    
+    public boolean wasConfirmPressed() {
+        return keyboard.wasConfirmPressed();
+    }
+
 
     public boolean isPressed(InputAction action) {
 
