@@ -2,16 +2,13 @@ package com.lobsterchops.brainlessgamejam.core;
 
 import com.lobsterchops.brainlessgamejam.audio.AudioService;
 import com.lobsterchops.brainlessgamejam.audio.JavaSoundAudioService;
-import com.lobsterchops.brainlessgamejam.entity.MamaDuck;
 import com.lobsterchops.brainlessgamejam.input.InputManager;
-import com.lobsterchops.brainlessgamejam.math.Vector2;
 import com.lobsterchops.brainlessgamejam.render.DebugMetrics;
 import com.lobsterchops.brainlessgamejam.render.RenderPipeline;
 import com.lobsterchops.brainlessgamejam.scene.GameUpdater;
 import com.lobsterchops.brainlessgamejam.scene.PausedScene;
 import com.lobsterchops.brainlessgamejam.scene.PlayingScene;
 import com.lobsterchops.brainlessgamejam.scene.SceneManager;
-import com.lobsterchops.brainlessgamejam.state.GameState;
 import com.lobsterchops.brainlessgamejam.world.GameSystem;
 
 public class GameContext {
@@ -46,8 +43,7 @@ public class GameContext {
 		GameSystem gameSystem = ServiceLocator.resolve(GameSystem.class);
 		gameSystem.clear(); // clears all objects, resets tick/time, sets state to PLAYING
 
-		// Spawn the player
-		gameSystem.addObject(new MamaDuck(new Vector2(512, 600)));
+		
 	}
 
 	public void restartRun() {
