@@ -110,6 +110,22 @@ public class SlimeParent extends Entity {
         }
     }
     
+    @Override
+    public void render(Graphics2D g2) {
+        BufferedImage sprite = SPRITES.get(facing);
+        if (sprite != null) {
+            g2.drawImage(sprite,
+                    (int) getPosition().x() - DRAW_WIDTH  / 2,
+                    (int) getPosition().y() - DRAW_HEIGHT / 2,
+                    null);
+        }
+    }
+ 
+    @Override
+    public RenderLayer getRenderLayer() {
+        return RenderLayer.ENTITIES;
+    }
+    
     private void checkCarCollision(UpdateContext context) {
         if (isDead) return;
         Bounds myBounds = getBounds();
@@ -216,19 +232,5 @@ public class SlimeParent extends Entity {
         }
     }
  
-    @Override
-    public void render(Graphics2D g2) {
-        BufferedImage sprite = SPRITES.get(facing);
-        if (sprite != null) {
-            g2.drawImage(sprite,
-                    (int) getPosition().x() - DRAW_WIDTH  / 2,
-                    (int) getPosition().y() - DRAW_HEIGHT / 2,
-                    null);
-        }
-    }
- 
-    @Override
-    public RenderLayer getRenderLayer() {
-        return RenderLayer.ENTITIES;
-    }
+   
 }

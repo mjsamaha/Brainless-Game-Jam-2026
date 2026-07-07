@@ -141,13 +141,13 @@ public class WaveManager {
 	}
 	
 	private void respawnChildren() {
-	    // Remove any existing children first
-	    gameSystem.getObjects().stream()
-	        .filter(o -> o instanceof SlimeChild)
-	        .map(o -> (SlimeChild) o)
-	        .forEach(SlimeChild::markInactive);
+		removeChildren();
 
-	    // Respawn fresh children on the parent's history
+		spawnChildren();
+	}
+
+	private void spawnChildren() {
+		// Respawn fresh children on the parent's history
 	    gameSystem.getObjects().stream()
 	        .filter(o -> o instanceof SlimeParent)
 	        .map(o -> (SlimeParent) o)
@@ -157,6 +157,14 @@ public class WaveManager {
 	        	    gameSystem.addObject(new SlimeChild(i, parent.getPositionHistory()));
 	        	}
 	        });
+	}
+
+	private void removeChildren() {
+		// Remove any existing children first
+	    gameSystem.getObjects().stream()
+	        .filter(o -> o instanceof SlimeChild)
+	        .map(o -> (SlimeChild) o)
+	        .forEach(SlimeChild::markInactive);
 	}
 
 	private int countLivingChildren() {

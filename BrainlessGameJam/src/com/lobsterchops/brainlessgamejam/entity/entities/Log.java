@@ -38,19 +38,6 @@ public class Log extends Entity {
         wrapAroundWorld();
     }
  
-    private void wrapAroundWorld() {
-        TileMap tileMap = ServiceLocator.resolve(TileMap.class);
-        float worldWidth = tileMap.worldWidth();
-        float x = getPosition().x();
-        float y = getPosition().y();
- 
-        if (speed > 0 && x - WIDTH / 2f > worldWidth) {
-            setPosition(new Vector2(-WIDTH / 2f, y));
-        } else if (speed < 0 && x + WIDTH / 2f < 0) {
-            setPosition(new Vector2(worldWidth + WIDTH / 2f, y));
-        }
-    }
- 
     @Override
     public void render(Graphics2D g2) {
         int drawX = (int) (getPosition().x() - WIDTH  / 2f);
@@ -73,6 +60,19 @@ public class Log extends Entity {
     @Override
     public RenderLayer getRenderLayer() {
         return RenderLayer.ENTITIES;
+    }
+    
+    private void wrapAroundWorld() {
+        TileMap tileMap = ServiceLocator.resolve(TileMap.class);
+        float worldWidth = tileMap.worldWidth();
+        float x = getPosition().x();
+        float y = getPosition().y();
+ 
+        if (speed > 0 && x - WIDTH / 2f > worldWidth) {
+            setPosition(new Vector2(-WIDTH / 2f, y));
+        } else if (speed < 0 && x + WIDTH / 2f < 0) {
+            setPosition(new Vector2(worldWidth + WIDTH / 2f, y));
+        }
     }
 }
  

@@ -61,18 +61,15 @@ public class ScoreSystem {
 	}
 
 	private void onEntityDestroyed(EntityDestroyed event) {
-		if (event.entity() instanceof SlimeChild) {
-			lives--;
-			if (lives <= 0) {
-				triggerGameOver();
-			}
-			return;
-		}
-		if (event.entity() instanceof SlimeParent) {
-			lives--;
-			if (lives <= 0) {
-				triggerGameOver();
-			}
+	    if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
+	        loseLife();
+	    }
+	}
+	
+	private void loseLife() {
+		lives--;
+		if (lives <= 0) {
+			triggerGameOver();
 		}
 	}
 

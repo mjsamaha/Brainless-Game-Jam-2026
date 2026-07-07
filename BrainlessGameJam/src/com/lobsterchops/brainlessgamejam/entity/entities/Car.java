@@ -40,22 +40,7 @@ public class Car extends Entity {
         super.update(context); // applies velocity → position
         wrapAroundWorld();
     }
- 
-    private void wrapAroundWorld() {
-        TileMap tileMap = ServiceLocator.resolve(TileMap.class);
-        float worldWidth = tileMap.worldWidth();
-        float x = getPosition().x();
-        float y = getPosition().y();
- 
-        // Moving right — wrap when fully off the right edge
-        if (speed > 0 && x - WIDTH / 2f > worldWidth) {
-            setPosition(new Vector2(-WIDTH / 2f, y));
-        }
-        // Moving left — wrap when fully off the left edge
-        else if (speed < 0 && x + WIDTH / 2f < 0) {
-            setPosition(new Vector2(worldWidth + WIDTH / 2f, y));
-        }
-    }
+
  
     @Override
     public void render(Graphics2D g2) {
@@ -74,5 +59,21 @@ public class Car extends Entity {
     @Override
     public RenderLayer getRenderLayer() {
         return RenderLayer.ENTITIES;
+    }
+    
+    private void wrapAroundWorld() {
+        TileMap tileMap = ServiceLocator.resolve(TileMap.class);
+        float worldWidth = tileMap.worldWidth();
+        float x = getPosition().x();
+        float y = getPosition().y();
+ 
+        // Moving right — wrap when fully off the right edge
+        if (speed > 0 && x - WIDTH / 2f > worldWidth) {
+            setPosition(new Vector2(-WIDTH / 2f, y));
+        }
+        // Moving left — wrap when fully off the left edge
+        else if (speed < 0 && x + WIDTH / 2f < 0) {
+            setPosition(new Vector2(worldWidth + WIDTH / 2f, y));
+        }
     }
 }

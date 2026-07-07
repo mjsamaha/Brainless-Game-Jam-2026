@@ -69,6 +69,24 @@ public class SlimeChild extends Entity {
         applyLogRiding(context);
         checkWater(context);
     }
+    
+    @Override
+    public void render(Graphics2D g2) {
+        if (positionHistory.size() <= historyOffset) return;
+ 
+        BufferedImage sprite = SPRITES.get(facing);
+        if (sprite != null) {
+            g2.drawImage(sprite,
+                    (int) getPosition().x() - DRAW_WIDTH  / 2,
+                    (int) getPosition().y() - DRAW_HEIGHT / 2,
+                    null);
+        }
+    }
+ 
+    @Override
+    public RenderLayer getRenderLayer() {
+        return RenderLayer.ENTITIES;
+    }
  
     /**
      * If standing on a log, ride it horizontally this tick.
@@ -127,21 +145,5 @@ public class SlimeChild extends Entity {
         }
     }
  
-    @Override
-    public void render(Graphics2D g2) {
-        if (positionHistory.size() <= historyOffset) return;
- 
-        BufferedImage sprite = SPRITES.get(facing);
-        if (sprite != null) {
-            g2.drawImage(sprite,
-                    (int) getPosition().x() - DRAW_WIDTH  / 2,
-                    (int) getPosition().y() - DRAW_HEIGHT / 2,
-                    null);
-        }
-    }
- 
-    @Override
-    public RenderLayer getRenderLayer() {
-        return RenderLayer.ENTITIES;
-    }
+  
 }

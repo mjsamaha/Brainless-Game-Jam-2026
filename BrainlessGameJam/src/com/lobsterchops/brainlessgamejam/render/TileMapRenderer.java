@@ -57,7 +57,6 @@ public class TileMapRenderer {
     private Map<TileType, BufferedImage> loadSprites() {
         Map<TileType, BufferedImage> map = new EnumMap<>(TileType.class);
         for (TileType type : TileType.values()) {
-            // Load 16×16 source, scale up to TILE_SIZE×TILE_SIZE
             map.put(type, AssetManager.get(type.spritePath, T, T));
         }
         return map;

@@ -19,65 +19,75 @@ import com.lobsterchops.brainlessgamejam.world.WaveManager;
 
 public class PlayingScene implements Scene {
 
-    private static final long  SHAKE_DURATION_NANOS = 200_000_000L;
-    private static final float SHAKE_MAGNITUDE      = 4f;
+	private static final long SHAKE_DURATION_NANOS = 200_000_000L;
+	private static final float SHAKE_MAGNITUDE = 4f;
 
-    private long lastCollisionSfxTick = -1L;
+	private long lastCollisionSfxTick = -1L;
 
-    private final GameSystem     gameSystem;
-    private final RenderPipeline renderPipeline;
+	private final GameSystem gameSystem;
+	private final RenderPipeline renderPipeline;
 
-    public PlayingScene(GameSystem gameSystem, RenderPipeline renderPipeline) {
-        this.gameSystem     = gameSystem;
-        this.renderPipeline = renderPipeline;
-    }
+	public PlayingScene(GameSystem gameSystem, RenderPipeline renderPipeline) {
+		this.gameSystem = gameSystem;
+		this.renderPipeline = renderPipeline;
+	}
 
-    @Override
-    public void enter() {
-        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-        eventBus.subscribe(EntityDestroyed.class, this::onEntityDestroyed);
-        eventBus.subscribe(CollisionEvent.class,  this::onCollision);
-    }
+	@Override
+	public void enter() {
+		EventBus eventBus = ServiceLocator.resolve(EventBus.class);
+		eventBus.subscribe(EntityDestroyed.class, this::onEntityDestroyed);
+		eventBus.subscribe(CollisionEvent.class, this::onCollision);
+	}
 
-    @Override
-    public void update(UpdateContext context) {
-        WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
-        waveManager.update(context);
-        gameSystem.update();
-    }
+	@Override
+	public void update(UpdateContext context) {
+		WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
+		waveManager.update(context);
+		gameSystem.update();
+	}
 
-    @Override
-    public void render(Graphics2D g2) {
-        renderPipeline.renderWorld(g2);
-    }
+	@Override
+	public void render(Graphics2D g2) {
+		renderPipeline.renderWorld(g2);
+	}
 
-    private void onCollision(CollisionEvent event) {
-        boolean aIsCar = event.a() instanceof Car;
-        boolean bIsCar = event.b() instanceof Car;
+	private void onCollision(CollisionEvent event) {
+		boolean aIsCar = event.a() instanceof Car;
+		boolean bIsCar = event.b() instanceof Car;
 
-        // Only care about car collisions
-        if (!aIsCar && !bIsCar) return;
+		// Only care about car collisions
+		if (!aIsCar && !bIsCar)
+			return;
 
-        long currentTick = gameSystem.getTick();
-        if (currentTick - lastCollisionSfxTick < 30) return;
-        lastCollisionSfxTick = currentTick;
+		long currentTick = gameSystem.getTick();
+		if (currentTick - lastCollisionSfxTick < 30)
+			return;
+		lastCollisionSfxTick = currentTick;
 
-        AudioService audioService = ServiceLocator.resolve(AudioService.class);
-        audioService.playSfx(AudioType.COLLISION_SFX);
+		AudioService audioService = ServiceLocator.resolve(AudioService.class);
+		audioService.playSfx(AudioType.COLLISION_SFX);
 
-        Camera camera = ServiceLocator.resolve(Camera.class);
-        camera.shake(SHAKE_DURATION_NANOS, SHAKE_MAGNITUDE);
-    }
+		Camera camera = ServiceLocator.resolve(Camera.class);
+		camera.shake(SHAKE_DURATION_NANOS, SHAKE_MAGNITUDE);
+	}
 
-    private void onEntityDestroyed(EntityDestroyed event) {
-        AudioService audioService = ServiceLocator.resolve(AudioService.class);
+	private void onEntityDestroyed(EntityDestroyed event) {
+		if (event.entity() instanceof SlimeChild) {
+			shakeCamera();
+		}
 
-        if (event.entity() instanceof SlimeChild) {
-            Camera camera = ServiceLocator.resolve(Camera.class);
-            camera.shake(SHAKE_DURATION_NANOS, SHAKE_MAGNITUDE);
-            audioService.playSfx(AudioType.COLLISION_SFX);
-        } else if (event.entity() instanceof SlimeParent) {
-            audioService.playSfx(AudioType.COLLISION_SFX);
-        }
-    }
+		if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
+			playCollisionSfx();
+		}
+	}
+
+	private void shakeCamera() {
+		Camera camera = ServiceLocator.resolve(Camera.class);
+		camera.shake(SHAKE_DURATION_NANOS, SHAKE_MAGNITUDE);
+	}
+
+	private void playCollisionSfx() {
+		AudioService audioService = ServiceLocator.resolve(AudioService.class);
+		audioService.playSfx(AudioType.COLLISION_SFX);
+	}
 }
