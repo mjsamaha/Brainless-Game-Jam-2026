@@ -16,7 +16,7 @@ public class ScoreSystem {
 	private static final int POINTS_PER_CHILD = 100;
 	private static final int PERFECT_BONUS = 500;
 	private static int MAX_LIVES = 10;
-	private static int WAVE_COMPLETE_BONUS_LIVES = 2;
+	//private static int WAVE_COMPLETE_BONUS_LIVES = 2;
 
 	private int score;
 	private int highScore;
@@ -44,6 +44,7 @@ public class ScoreSystem {
 			child.markInactive();
 			eventBus.publish(new EntityDestroyed(child));
 		}
+		
 	}
 
 	private void onCrossingCompleted(CrossingCompleted event) {

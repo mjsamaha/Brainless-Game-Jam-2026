@@ -14,7 +14,7 @@ import com.lobsterchops.brainlessgamejam.entity.UpdateContext;
  */
 public class PausedScene implements Scene {
  
-	private static final Color OVERLAY = new Color(0, 0, 0, 140);
+	private static final Color OVERLAY = new Color(0, 0, 0, 150);
  
 	private final AudioService audioService;
 	private final SceneManager sceneManager;

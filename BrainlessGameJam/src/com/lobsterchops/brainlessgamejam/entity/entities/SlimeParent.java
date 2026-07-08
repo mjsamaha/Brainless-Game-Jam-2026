@@ -126,44 +126,44 @@ public class SlimeParent extends Entity {
         return RenderLayer.ENTITIES;
     }
     
+    /**
+     * Checks for collisions with active Car objects. 
+     * If a collision is detected, the parent is marked as dead and an EntityDestroyed event is published.
+     * @param context
+     */
     private void checkCarCollision(UpdateContext context) {
         if (isDead) return;
-        Bounds myBounds = getBounds();
-        for (GameObject obj : context.gameSystem().getObjects()) {
-            if (obj instanceof Car car && car.isActive()) {
-                if (car.getBounds().intersects(myBounds)) {
-                    isDead = true;
-                    EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-                    eventBus.publish(new EntityDestroyed(this));
-                    return;
-                }
-            }
-        }
+        context.gameSystem().getObjects().stream()
+            .filter(obj -> obj instanceof Car car && car.isActive())
+            .map(obj -> (Car) obj)
+            .filter(car -> car.getBounds().intersects(getBounds()))
+            .findFirst()
+            .ifPresent(car -> onHitByCar());
+    }
+
+    private void onHitByCar() {
+        isDead = true;
+        ServiceLocator.resolve(EventBus.class).publish(new EntityDestroyed(this));
     }
     
     
-
- 
     /**
      * Fires {@link CrossingCompleted} once when the parent reaches the top row.
      * The {@code allAlive} flag compares living children against the wave's
      * starting count — supplied by counting SlimeChild objects in GameSystem.
      */
     private void checkCrossing(UpdateContext context) {
-        if (hasCrossed) return;
-        if (getPosition().y() >= CROSSING_THRESHOLD_Y) return;
- 
+        if (hasCrossed || getPosition().y() >= CROSSING_THRESHOLD_Y) return;
+
         hasCrossed = true;
- 
-        int childrenAlive = countLivingChildren(context.gameSystem());
- 
-        // "All alive" means every child is still present — WaveManager set
-        // waveStartChildCount, but we don't have a direct reference here.
-        // We compare against NUM_CHILDREN (the chain always starts full).
+
+        publishCrossingCompleted(context.gameSystem());
+    }
+
+    private void publishCrossingCompleted(GameSystem gameSystem) {
+        int childrenAlive = countLivingChildren(gameSystem);
         boolean allAlive = childrenAlive == SlimeChild.NUM_CHILDREN;
- 
-        EventBus eventBus = ServiceLocator.resolve(EventBus.class);
-        eventBus.publish(new CrossingCompleted(childrenAlive, allAlive));
+        ServiceLocator.resolve(EventBus.class).publish(new CrossingCompleted(childrenAlive, allAlive));
     }
  
     private int countLivingChildren(GameSystem gameSystem) {
