@@ -20,14 +20,15 @@ public final class Gfx {
     public static final String SLIME_CHILD_LEFT  = "/gfx/slime-child-left.png";
     public static final String SLIME_CHILD_RIGHT = "/gfx/slime-child-right.png";
     
-    // TODO: Car sprites
-//    public static final String CAR_RED    = "/gfx/cars/car-red.png";
-//    public static final String CAR_BLUE   = "/gfx/cars/car-blue.png";
-//    public static final String CAR_ORANGE = "/gfx/cars/car-orange.png";
-//    public static final String CAR_PURPLE = "/gfx/cars/car-purple.png";
-//    public static final String CAR_GREEN  = "/gfx/cars/car-green.png";
+    // Car
+    public static final String CAR_RED = "/gfx/red-car.png";
+    public static final String CAR_BLUE = "/gfx/blue-car.png";
+    public static final String CAR_ORANGE = "/gfx/orange-car.png";
     
-    // TODO: Log sprites
+    // Log
+    public static final String LOG = "/gfx/log.png";
+    
+    
 	
 	private Gfx() {
 		
