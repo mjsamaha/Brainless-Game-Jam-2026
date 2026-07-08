@@ -16,7 +16,7 @@ public class Camera {
 	private float shakeMagnitude = 0f;
 	private float shakeOffsetX = 0f;
 	private float shakeOffsetY = 0f;
-	
+
 	private float zoom = 1f;
 
 	/** Creates a camera sized to the full screen. */
@@ -36,14 +36,15 @@ public class Camera {
 	}
 
 	/**
-	 * Centres the camera on a world-space position. Call once per tick before the render pass.
+	 * Centres the camera on a world-space position. Call once per tick before the
+	 * render pass.
 	 *
 	 * @param worldX centre target, world X in pixels
 	 * @param worldY centre target, world Y in pixels
 	 */
 	public void follow(float worldX, float worldY) {
-	    offsetX = worldX - (viewWidth / zoom) / ScreenConfig.CENTER_DIVISOR;
-	    offsetY = worldY - (viewHeight / zoom) / ScreenConfig.CENTER_DIVISOR;
+		offsetX = worldX - (viewWidth / zoom) / ScreenConfig.CENTER_DIVISOR;
+		offsetY = worldY - (viewHeight / zoom) / ScreenConfig.CENTER_DIVISOR;
 	}
 
 	/** Convenience overload for {@link Vector2}. */
@@ -57,7 +58,8 @@ public class Camera {
 	 *
 	 * @param worldMinX left edge of the world in pixels (usually 0)
 	 * @param worldMinY top edge of the world in pixels (usually 0)
-	 * @param worldMaxX right edge of the world in pixels (e.g. mapWidthTiles * tileSize)
+	 * @param worldMaxX right edge of the world in pixels (e.g. mapWidthTiles *
+	 *                  tileSize)
 	 * @param worldMaxY bottom edge of the world in pixels
 	 */
 	public void clamp(float worldMinX, float worldMinY, float worldMaxX, float worldMaxY) {
@@ -100,24 +102,24 @@ public class Camera {
 	}
 
 	public int toScreenX(float worldX) {
-	    return (int) ((worldX - offsetX + shakeOffsetX) * zoom);
+		return (int) ((worldX - offsetX + shakeOffsetX) * zoom);
 	}
 
 	public int toScreenY(float worldY) {
-	    return (int) ((worldY - offsetY + shakeOffsetY) * zoom);
+		return (int) ((worldY - offsetY + shakeOffsetY) * zoom);
 	}
 
 	public float getZoom() {
-	    return zoom;
+		return zoom;
 	}
 
 	public void setZoom(float zoom) {
-	    this.zoom = Math.max(0.1f, zoom); // guard against zero/negative
+		this.zoom = Math.max(0.1f, zoom); // guard against zero/negative
 	}
 
 	/**
-	 * Returns the visible world region this frame, in world-space pixel coordinates.
-	 * Use this to skip rendering of objects outside the viewport.
+	 * Returns the visible world region this frame, in world-space pixel
+	 * coordinates. Use this to skip rendering of objects outside the viewport.
 	 *
 	 * <pre>
 	 * Bounds view = camera.getViewBounds();
@@ -153,7 +155,5 @@ public class Camera {
 	public boolean isShaking() {
 		return shakeRemainingNanos > 0L;
 	}
-	
-	
 
 }

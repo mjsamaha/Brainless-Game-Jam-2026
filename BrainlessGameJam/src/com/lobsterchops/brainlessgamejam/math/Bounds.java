@@ -1,19 +1,13 @@
 package com.lobsterchops.brainlessgamejam.math;
 
 public record Bounds(float x, float y, float width, float height) {
-	
+
 	public boolean intersects(Bounds other) {
-		return x < other.x + other.width
-				&& x + width > other.x
-				&& y < other.y + other.height
-				&& y + height > other.y;
+		return x < other.x + other.width && x + width > other.x && y < other.y + other.height && y + height > other.y;
 	}
 
 	public boolean contains(Vector2 point) {
-		return point.x() >= x
-				&& point.x() <= x + width
-				&& point.y() >= y
-				&& point.y() <= y + height;
+		return point.x() >= x && point.x() <= x + width && point.y() >= y && point.y() <= y + height;
 	}
 
 	public Vector2 center() {

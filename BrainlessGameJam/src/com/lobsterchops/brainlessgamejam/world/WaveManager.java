@@ -11,11 +11,10 @@ import com.lobsterchops.brainlessgamejam.util.Timer;
 import com.lobsterchops.brainlessgamejam.world.common.GameState;
 
 public class WaveManager {
-	
+
 	private int currentChildCount = SlimeChild.NUM_CHILDREN;
 
 	public static final long INTER_WAVE_DELAY_MS = 3_000L;
-
 
 	private final GameSystem gameSystem;
 	private final EventBus eventBus;
@@ -108,20 +107,20 @@ public class WaveManager {
 	}
 
 	private void beginNextWave() {
-	    interWaveActive = false;
-	    interWaveTimer = null;
-	    currentWave++;
-	    currentChildCount += currentWave; 
+		interWaveActive = false;
+		interWaveTimer = null;
+		currentWave++;
+		currentChildCount += currentWave;
 
-	    roadLayout.clearCars(gameSystem);
-	    riverLayout.clearLogs(gameSystem);
-	    spawnHazards();
-	    respawnChildren(); 
+		roadLayout.clearCars(gameSystem);
+		riverLayout.clearLogs(gameSystem);
+		spawnHazards();
+		respawnChildren();
 
-	    waveStartChildCount = currentChildCount;
+		waveStartChildCount = currentChildCount;
 
-	    gameSystem.setState(GameState.PLAYING);
-	    eventBus.publish(new WaveCompleted(currentWave));
+		gameSystem.setState(GameState.PLAYING);
+		eventBus.publish(new WaveCompleted(currentWave));
 	}
 
 	private void spawnHazards() {
@@ -139,7 +138,7 @@ public class WaveManager {
 					parent.initPositionHistory();
 				});
 	}
-	
+
 	private void respawnChildren() {
 		removeChildren();
 
@@ -148,31 +147,27 @@ public class WaveManager {
 
 	private void spawnChildren() {
 		// Respawn fresh children on the parent's history
-	    gameSystem.getObjects().stream()
-	        .filter(o -> o instanceof SlimeParent)
-	        .map(o -> (SlimeParent) o)
-	        .findFirst()
-	        .ifPresent(parent -> {
-	        	for (int i = 0; i < currentChildCount; i++) {
-	        	    gameSystem.addObject(new SlimeChild(i, parent.getPositionHistory()));
-	        	}
-	        });
+		gameSystem.getObjects().stream().filter(o -> o instanceof SlimeParent).map(o -> (SlimeParent) o).findFirst()
+				.ifPresent(parent -> {
+					for (int i = 0; i < currentChildCount; i++) {
+						gameSystem.addObject(new SlimeChild(i, parent.getPositionHistory()));
+					}
+				});
 	}
 
 	private void removeChildren() {
 		// Remove any existing children first
-	    gameSystem.getObjects().stream()
-	        .filter(o -> o instanceof SlimeChild)
-	        .map(o -> (SlimeChild) o)
-	        .forEach(SlimeChild::markInactive);
+		gameSystem.getObjects().stream().filter(o -> o instanceof SlimeChild).map(o -> (SlimeChild) o)
+				.forEach(SlimeChild::markInactive);
 	}
 
 	private int countLivingChildren() {
 		return (int) gameSystem.getObjects().stream()
-				.filter(o -> o instanceof com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild && o.isActive()).count();
+				.filter(o -> o instanceof com.lobsterchops.brainlessgamejam.entity.entities.SlimeChild && o.isActive())
+				.count();
 	}
-	
+
 	public int getCurrentChildCount() {
-	    return currentChildCount;
+		return currentChildCount;
 	}
 }

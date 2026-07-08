@@ -15,16 +15,16 @@ public class ScoreSystem {
 
 	// Constants for scoring and lives
 	private static final int POINTS_PER_CHILD = 100;
-	
+
 	// Bonus points for a perfect crossing (all children alive)
 	private static final int PERFECT_BONUS = 500;
-	
+
 	// Starting number of lives for the player
 	private static final int STARTING_LIVES = 10;
-	
+
 	// Bonus lives awarded for completing a wave
 	private static final int WAVE_COMPLETE_BONUS_LIVES = 3;
-	
+
 	// Wave number threshold for awarding extra lives
 	private static final int LATE_WAVE_THRESHOLD = 3;
 
@@ -57,34 +57,34 @@ public class ScoreSystem {
 	}
 
 	private void onCrossingCompleted(CrossingCompleted event) {
-	    applyScoreReward(event);
-	    applyLivesReward(event);
+		applyScoreReward(event);
+		applyLivesReward(event);
 	}
 
 	private void applyScoreReward(CrossingCompleted event) {
-	    int delta = event.childrenAlive() * POINTS_PER_CHILD;
-	    if (event.allAlive()) {
-	        delta += PERFECT_BONUS;
-	    }
-	    score += delta;
-	    lastCrossingDelta = delta;
-	    lastCrossingWasPerfect = event.allAlive();
+		int delta = event.childrenAlive() * POINTS_PER_CHILD;
+		if (event.allAlive()) {
+			delta += PERFECT_BONUS;
+		}
+		score += delta;
+		lastCrossingDelta = delta;
+		lastCrossingWasPerfect = event.allAlive();
 	}
 
 	private void applyLivesReward(CrossingCompleted event) {
-	    if (event.waveNumber() >= LATE_WAVE_THRESHOLD) {
-	        lives += WAVE_COMPLETE_BONUS_LIVES * 2 + event.childrenAlive();
-	    } else {
-	        lives += WAVE_COMPLETE_BONUS_LIVES;
-	    }
+		if (event.waveNumber() >= LATE_WAVE_THRESHOLD) {
+			lives += WAVE_COMPLETE_BONUS_LIVES * 2 + event.childrenAlive();
+		} else {
+			lives += WAVE_COMPLETE_BONUS_LIVES;
+		}
 	}
 
 	private void onEntityDestroyed(EntityDestroyed event) {
-	    if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
-	        loseLife();
-	    }
+		if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
+			loseLife();
+		}
 	}
-	
+
 	private void loseLife() {
 		lives--;
 		if (lives <= 0) {
@@ -121,9 +121,9 @@ public class ScoreSystem {
 	}
 
 	public void reset() {
-	    score = 0;
-	    lives = STARTING_LIVES;  
-	    lastCrossingDelta = 0;
-	    lastCrossingWasPerfect = false;
+		score = 0;
+		lives = STARTING_LIVES;
+		lastCrossingDelta = 0;
+		lastCrossingWasPerfect = false;
 	}
 }

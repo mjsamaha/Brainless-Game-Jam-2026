@@ -25,11 +25,11 @@ public class Game {
 	}
 
 	private static JFrame buildWindow() {
-	    JFrame frame = new JFrame();
-	    frame.setTitle(Version.getWindowTitle());
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.setResizable(false);
-	    return frame;
+		JFrame frame = new JFrame();
+		frame.setTitle(Version.getWindowTitle());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		return frame;
 	}
 
 }

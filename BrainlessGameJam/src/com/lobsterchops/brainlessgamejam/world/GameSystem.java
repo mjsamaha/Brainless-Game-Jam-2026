@@ -13,125 +13,125 @@ import com.lobsterchops.brainlessgamejam.world.common.GameState;
 
 public class GameSystem {
 
-    private final List<GameObject> objects = new ArrayList<>();
-    private final List<GameObject> pendingObjects = new ArrayList<>();
-    private final CollisionSystem collisionSystem;
+	private final List<GameObject> objects = new ArrayList<>();
+	private final List<GameObject> pendingObjects = new ArrayList<>();
+	private final CollisionSystem collisionSystem;
 
-    private GameState state = GameState.MENU;
+	private GameState state = GameState.MENU;
 
-    private long tick;
-    private long elapsedMillis;
+	private long tick;
+	private long elapsedMillis;
 
-    public GameSystem(EventBus eventBus) {
-        this.collisionSystem = new CollisionSystem(eventBus);
-    }
+	public GameSystem(EventBus eventBus) {
+		this.collisionSystem = new CollisionSystem(eventBus);
+	}
 
-    public void update() {
-        if (state != GameState.PLAYING) {
-            return;
-        }
+	public void update() {
+		if (state != GameState.PLAYING) {
+			return;
+		}
 
-        beginUpdate();
-        updateTime();
-        updateMetaSystems();
+		beginUpdate();
+		updateTime();
+		updateMetaSystems();
 
-        UpdateContext context = createContext();
+		UpdateContext context = createContext();
 
-        updateObjects(context);
-        updateSystems(context);
+		updateObjects(context);
+		updateSystems(context);
 
-        endUpdate();
-    }
+		endUpdate();
+	}
 
-    public void addObject(GameObject object) {
-        if (object != null) {
-            pendingObjects.add(object);
-        }
-    }
+	public void addObject(GameObject object) {
+		if (object != null) {
+			pendingObjects.add(object);
+		}
+	}
 
-    public void clear() {
-        tick = 0;
-        elapsedMillis = 0;
-        objects.clear();
-        pendingObjects.clear();
-        state = GameState.PLAYING;
-    }
+	public void clear() {
+		tick = 0;
+		elapsedMillis = 0;
+		objects.clear();
+		pendingObjects.clear();
+		state = GameState.PLAYING;
+	}
 
-    private void beginUpdate() {
-        flushPendingObjects();
-    }
+	private void beginUpdate() {
+		flushPendingObjects();
+	}
 
-    private void updateTime() {
-        tick++;
-        elapsedMillis += Math.round(GameLoopConfig.MILLIS_PER_SECOND / GameLoopConfig.TARGET_FPS);
-    }
+	private void updateTime() {
+		tick++;
+		elapsedMillis += Math.round(GameLoopConfig.MILLIS_PER_SECOND / GameLoopConfig.TARGET_FPS);
+	}
 
-    private void updateMetaSystems() {
-    }
+	private void updateMetaSystems() {
+	}
 
-    private UpdateContext createContext() {
-        return UpdateContext.fixed(this, tick, elapsedMillis);
-    }
+	private UpdateContext createContext() {
+		return UpdateContext.fixed(this, tick, elapsedMillis);
+	}
 
-    private void updateObjects(UpdateContext context) {
-        for (GameObject object : objects) {
-            if (object.isActive()) {
-                object.update(context);
-            }
-        }
-    }
+	private void updateObjects(UpdateContext context) {
+		for (GameObject object : objects) {
+			if (object.isActive()) {
+				object.update(context);
+			}
+		}
+	}
 
-    private void updateSystems(UpdateContext context) {
-        collisionSystem.resolve(objects);
-    }
+	private void updateSystems(UpdateContext context) {
+		collisionSystem.resolve(objects);
+	}
 
-    private void endUpdate() {
-        flushPendingObjects();
-        removeInactiveObjects();
-    }
+	private void endUpdate() {
+		flushPendingObjects();
+		removeInactiveObjects();
+	}
 
-    private void flushPendingObjects() {
-        if (!pendingObjects.isEmpty()) {
-            objects.addAll(pendingObjects);
-            pendingObjects.clear();
-        }
-    }
+	private void flushPendingObjects() {
+		if (!pendingObjects.isEmpty()) {
+			objects.addAll(pendingObjects);
+			pendingObjects.clear();
+		}
+	}
 
-    private void removeInactiveObjects() {
-        objects.removeIf(object -> !object.isActive());
-    }
+	private void removeInactiveObjects() {
+		objects.removeIf(object -> !object.isActive());
+	}
 
-    public GameState getState() {
-        return state;
-    }
+	public GameState getState() {
+		return state;
+	}
 
-    public void setState(GameState state) {
-        this.state = state;
-    }
+	public void setState(GameState state) {
+		this.state = state;
+	}
 
-    public long getTick() {
-        return tick;
-    }
+	public long getTick() {
+		return tick;
+	}
 
-    public long getElapsedMillis() {
-        return elapsedMillis;
-    }
+	public long getElapsedMillis() {
+		return elapsedMillis;
+	}
 
-    public CollisionSystem getCollisionSystem() {
-        return collisionSystem;
-    }
+	public CollisionSystem getCollisionSystem() {
+		return collisionSystem;
+	}
 
-    public List<GameObject> getObjects() {
-        return Collections.unmodifiableList(objects);
-    }
+	public List<GameObject> getObjects() {
+		return Collections.unmodifiableList(objects);
+	}
 
-    public List<Renderable> getRenderableObjects() {
-        List<Renderable> renderables = new ArrayList<>();
-        for (GameObject object : objects) {
-            if (object instanceof Renderable renderable && object.isActive()) {
-                renderables.add(renderable);
-            }
-        }
-        return renderables;
-    }
+	public List<Renderable> getRenderableObjects() {
+		List<Renderable> renderables = new ArrayList<>();
+		for (GameObject object : objects) {
+			if (object instanceof Renderable renderable && object.isActive()) {
+				renderables.add(renderable);
+			}
+		}
+		return renderables;
+	}
 }

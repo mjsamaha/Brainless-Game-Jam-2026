@@ -56,11 +56,11 @@ public class Car extends Entity {
 	}
 
 	private void drawSprite(Graphics2D g2, int drawX, int drawY) {
-	    if (speed > 0) {
-	        g2.drawImage(sprite, drawX + (int) WIDTH, drawY, -(int) WIDTH, (int) HEIGHT, null);
-	    } else {
-	        g2.drawImage(sprite, drawX, drawY, null);
-	    }
+		if (speed > 0) {
+			g2.drawImage(sprite, drawX + (int) WIDTH, drawY, -(int) WIDTH, (int) HEIGHT, null);
+		} else {
+			g2.drawImage(sprite, drawX, drawY, null);
+		}
 	}
 
 	@Override

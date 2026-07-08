@@ -4,50 +4,44 @@ import java.awt.Component;
 
 import com.lobsterchops.brainlessgamejam.math.Vector2;
 
-
 public class InputManager {
 
-    private final KeyboardInput keyboard =
-            new KeyboardInput();
+	private final KeyboardInput keyboard = new KeyboardInput();
 
-    private final MouseInput mouse =
-            new MouseInput();
+	private final MouseInput mouse = new MouseInput();
 
-    public void register(Component component) {
+	public void register(Component component) {
 
-        component.addKeyListener(keyboard);
+		component.addKeyListener(keyboard);
 
-        component.addMouseMotionListener(mouse);
+		component.addMouseMotionListener(mouse);
 
-        component.setFocusable(true);
+		component.setFocusable(true);
 
-        component.requestFocusInWindow();
-    }
-    
+		component.requestFocusInWindow();
+	}
 
+	public Vector2 movementDirection() {
 
-    public Vector2 movementDirection() {
+		return keyboard.movementDirection();
+	}
 
-        return keyboard.movementDirection();
-    }
+	public Vector2 getMousePosition() {
 
-    public Vector2 getMousePosition() {
+		return mouse.getMousePosition();
+	}
 
-        return mouse.getMousePosition();
-    }
-    
-    public boolean wasConfirmPressed() {
-        return keyboard.wasConfirmPressed();
-    }
+	public boolean wasConfirmPressed() {
+		return keyboard.wasConfirmPressed();
+	}
 
+	public boolean isPressed(InputAction action) {
 
-    public boolean isPressed(InputAction action) {
+		return keyboard.isPressed(action);
+	}
 
-        return keyboard.isPressed(action);
-    }
+	public Command pollCommand() {
 
-    public Command pollCommand() {
-
-        return keyboard.pollCommand();
-    }
+		return keyboard.pollCommand();
+	}
 }
