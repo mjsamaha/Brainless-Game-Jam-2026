@@ -10,6 +10,7 @@ import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.event.GameOverEvent;
+import com.lobsterchops.brainlessgamejam.util.ScoreRepository;
 
 public class ScoreSystem {
 
@@ -38,10 +39,11 @@ public class ScoreSystem {
 	private final EventBus eventBus;
 
 	public ScoreSystem(EventBus eventBus) {
-		this.eventBus = eventBus;
-		eventBus.subscribe(CrossingCompleted.class, this::onCrossingCompleted);
-		eventBus.subscribe(EntityDestroyed.class, this::onEntityDestroyed);
-		eventBus.subscribe(CollisionEvent.class, this::onCollision);
+	    this.eventBus = eventBus;
+	    this.highScore = ScoreRepository.load(); // <- add this
+	    eventBus.subscribe(CrossingCompleted.class, this::onCrossingCompleted);
+	    eventBus.subscribe(EntityDestroyed.class,   this::onEntityDestroyed);
+	    eventBus.subscribe(CollisionEvent.class,    this::onCollision);
 	}
 
 	private void onCollision(CollisionEvent event) {
@@ -93,11 +95,12 @@ public class ScoreSystem {
 	}
 
 	private void triggerGameOver() {
-		if (score > highScore) {
-			highScore = score;
-		}
-		WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
-		eventBus.publish(new GameOverEvent(score, waveManager.getCurrentWave()));
+	    if (score > highScore) {
+	        highScore = score;
+	        ScoreRepository.save(highScore); // <- add this
+	    }
+	    WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
+	    eventBus.publish(new GameOverEvent(score, waveManager.getCurrentWave()));
 	}
 
 	public int getScore() {

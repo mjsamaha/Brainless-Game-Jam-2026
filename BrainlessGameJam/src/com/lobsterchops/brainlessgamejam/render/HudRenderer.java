@@ -39,8 +39,11 @@ import com.lobsterchops.brainlessgamejam.world.common.GameState;
  */
 public class HudRenderer {
  
-    private static final int BAR_HEIGHT   = 48;
+    private static final int BAR_HEIGHT   = 64;
     private static final int SHADOW_OFFSET = 2;
+    
+    private static final Color BEST_VALUE = new Color(200, 160, 255);  // soft purple
+    private static final Color BEST_LABEL = new Color(140, 100, 190);  // muted purple
  
     // Child silhouette dots
     private static final int DOT_RADIUS          = 7;
@@ -111,6 +114,32 @@ public class HudRenderer {
         renderWaveIndicator(g2, wave.getCurrentWave());
         renderLivesIndicator(g2, score.getLives());
         renderScoreIndicator(g2, score.getScore());
+        
+        if (score.getHighScore() > 0) {
+            renderBestIndicator(g2, score.getHighScore());
+        }
+    }
+    
+    private void renderBestIndicator(Graphics2D g2, int highScore) {
+    	final int rightEdge = ScreenConfig.WIDTH - 16;
+        final int belowScore = BAR_HEIGHT - 10;  // was BAR_HEIGHT - 8
+
+        String label = "BEST";
+        String value = String.format("%06d", highScore);
+
+        g2.setFont(FONT_LABEL);
+        int labelW = g2.getFontMetrics().stringWidth(label);
+
+        g2.setFont(FONT_LABEL);  // smaller font for both label and value here
+        FontMetrics fm = g2.getFontMetrics();
+        int valueW = fm.stringWidth(value);
+
+        int gap    = 6;
+        int blockW = labelW + gap + valueW;
+        int blockX = rightEdge - blockW;
+
+        drawShadowedString(g2, FONT_LABEL, BEST_LABEL, label, blockX,              belowScore);
+        drawShadowedString(g2, FONT_LABEL, BEST_VALUE, value, blockX + labelW + gap, belowScore);
     }
     
     private void renderLivesIndicator(Graphics2D g2, int lives) {
@@ -221,8 +250,8 @@ public class HudRenderer {
         int blockW = labelW + gap + valueW;
         int blockX = rightEdge - blockW;
  
-        int baseline = centreY + valueFm.getAscent() / 2 - 2;
- 
+        int baseline = BAR_HEIGHT / 3 + valueFm.getAscent() / 2;
+        
         drawShadowedString(g2, FONT_LABEL, SCORE_LABEL, label,              blockX,             baseline);
         drawShadowedString(g2, FONT_VALUE, SCORE_VALUE, value,              blockX + labelW + gap, baseline);
     }

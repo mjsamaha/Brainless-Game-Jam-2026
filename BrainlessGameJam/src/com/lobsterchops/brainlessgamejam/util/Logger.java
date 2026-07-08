@@ -30,4 +30,8 @@ public final class Logger {
     public static void log(String level, String msg) {
         System.out.printf("[%s] [%s] %s%n", LocalTime.now().format(FMT), level, msg);
     }
+
+	public static Logger getLogger(String name) {
+		return new Logger();
+	}
 }
