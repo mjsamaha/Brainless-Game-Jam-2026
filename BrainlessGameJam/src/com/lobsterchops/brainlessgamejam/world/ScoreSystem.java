@@ -10,13 +10,24 @@ import com.lobsterchops.brainlessgamejam.event.CrossingCompleted;
 import com.lobsterchops.brainlessgamejam.event.EntityDestroyed;
 import com.lobsterchops.brainlessgamejam.event.EventBus;
 import com.lobsterchops.brainlessgamejam.event.GameOverEvent;
+import com.lobsterchops.brainlessgamejam.util.ScoreRepository;
 
 public class ScoreSystem {
 
+	// Constants for scoring and lives
 	private static final int POINTS_PER_CHILD = 100;
+
+	// Bonus points for a perfect crossing (all children alive)
 	private static final int PERFECT_BONUS = 500;
-	private static int MAX_LIVES = 10;
-	//private static int WAVE_COMPLETE_BONUS_LIVES = 2;
+
+	// Starting number of lives for the player
+	private static final int STARTING_LIVES = 10;
+
+	// Bonus lives awarded for completing a wave
+	private static final int WAVE_COMPLETE_BONUS_LIVES = 3;
+
+	// Wave number threshold for awarding extra lives
+	private static final int LATE_WAVE_THRESHOLD = 3;
 
 	private int score;
 	private int highScore;
@@ -28,10 +39,11 @@ public class ScoreSystem {
 	private final EventBus eventBus;
 
 	public ScoreSystem(EventBus eventBus) {
-		this.eventBus = eventBus;
-		eventBus.subscribe(CrossingCompleted.class, this::onCrossingCompleted);
-		eventBus.subscribe(EntityDestroyed.class, this::onEntityDestroyed);
-		eventBus.subscribe(CollisionEvent.class, this::onCollision);
+	    this.eventBus = eventBus;
+	    this.highScore = ScoreRepository.load(); // <- add this
+	    eventBus.subscribe(CrossingCompleted.class, this::onCrossingCompleted);
+	    eventBus.subscribe(EntityDestroyed.class,   this::onEntityDestroyed);
+	    eventBus.subscribe(CollisionEvent.class,    this::onCollision);
 	}
 
 	private void onCollision(CollisionEvent event) {
@@ -48,6 +60,11 @@ public class ScoreSystem {
 	}
 
 	private void onCrossingCompleted(CrossingCompleted event) {
+		applyScoreReward(event);
+		applyLivesReward(event);
+	}
+
+	private void applyScoreReward(CrossingCompleted event) {
 		int delta = event.childrenAlive() * POINTS_PER_CHILD;
 		if (event.allAlive()) {
 			delta += PERFECT_BONUS;
@@ -55,18 +72,22 @@ public class ScoreSystem {
 		score += delta;
 		lastCrossingDelta = delta;
 		lastCrossingWasPerfect = event.allAlive();
-		
-		MAX_LIVES += event.childrenAlive() / 2; // Increase max lives based on children alive
-		// unless we add+= WAVE_COMPLETE_BONUS_LIVES
-		
+	}
+
+	private void applyLivesReward(CrossingCompleted event) {
+		if (event.waveNumber() >= LATE_WAVE_THRESHOLD) {
+			lives += WAVE_COMPLETE_BONUS_LIVES * 2 + event.childrenAlive();
+		} else {
+			lives += WAVE_COMPLETE_BONUS_LIVES;
+		}
 	}
 
 	private void onEntityDestroyed(EntityDestroyed event) {
-	    if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
-	        loseLife();
-	    }
+		if (event.entity() instanceof SlimeChild || event.entity() instanceof SlimeParent) {
+			loseLife();
+		}
 	}
-	
+
 	private void loseLife() {
 		lives--;
 		if (lives <= 0) {
@@ -75,11 +96,12 @@ public class ScoreSystem {
 	}
 
 	private void triggerGameOver() {
-		if (score > highScore) {
-			highScore = score;
-		}
-		WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
-		eventBus.publish(new GameOverEvent(score, waveManager.getCurrentWave()));
+	    if (score > highScore) {
+	        highScore = score;
+	        ScoreRepository.save(highScore); // <- add this
+	    }
+	    WaveManager waveManager = ServiceLocator.resolve(WaveManager.class);
+	    eventBus.publish(new GameOverEvent(score, waveManager.getCurrentWave()));
 	}
 
 	public int getScore() {
@@ -104,7 +126,7 @@ public class ScoreSystem {
 
 	public void reset() {
 		score = 0;
-		lives = MAX_LIVES;
+		lives = STARTING_LIVES;
 		lastCrossingDelta = 0;
 		lastCrossingWasPerfect = false;
 	}

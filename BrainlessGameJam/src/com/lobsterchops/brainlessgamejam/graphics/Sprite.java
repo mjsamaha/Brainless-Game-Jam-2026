@@ -6,14 +6,14 @@ import java.awt.image.BufferedImage;
 import com.lobsterchops.brainlessgamejam.math.Vector2;
 
 public class Sprite {
-	
+
 	private final BufferedImage image;
 	private final int width;
 	private final int height;
-	
+
 	private final int originX;
 	private final int originY;
-	
+
 	public Sprite(BufferedImage image) {
 		this(image, 0, 0);
 	}
@@ -25,7 +25,7 @@ public class Sprite {
 		this.originX = originX;
 		this.originY = originY;
 	}
-	
+
 	public void draw(Graphics2D g2, int x, int y) {
 		g2.drawImage(image, x - originX, y - originY, null);
 	}

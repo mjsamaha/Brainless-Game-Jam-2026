@@ -1,7 +1,7 @@
 package com.lobsterchops.brainlessgamejam.config;
 
 public final class GameLoopConfig {
-	
+
 	public static final int TARGET_FPS = 60;
 	public static final double DRAW_INTERVAL_NANOS = 1_000_000_000.0 / TARGET_FPS;
 	public static final long TIMER_INTERVAL_NANOS = 1_000_000_000L;
@@ -21,7 +21,7 @@ public final class GameLoopConfig {
 
 	/** Multiplier applied to all enemy stats in endless mode per cycle. */
 	public static final float ENDLESS_DIFFICULTY_SCALE = 1.15f;
-	
+
 	public static final long MILLIS_PER_SECOND = 1000L;
 
 	private GameLoopConfig() {

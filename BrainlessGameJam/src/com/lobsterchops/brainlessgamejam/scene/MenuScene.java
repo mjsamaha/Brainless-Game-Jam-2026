@@ -24,7 +24,6 @@ import com.lobsterchops.brainlessgamejam.world.ScoreSystem;
  * handling to start a run) are decided.
  * </p>
  */
-
 public class MenuScene implements Scene {
 
 	private static final Font FONT_TITLE = FontLoader.load("/fonts/Mojang-Regular.ttf", 48f);

@@ -1,6 +1,5 @@
 package com.lobsterchops.brainlessgamejam.audio;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -55,23 +54,26 @@ public class JavaSoundAudioService implements AudioService {
 
 	@Override
 	public synchronized void init() {
-	    if (initialized) return;
-	    initialized = true;
-	    paused = false;
-	    preloadSfx();
+		if (initialized)
+			return;
+		initialized = true;
+		paused = false;
+		preloadSfx();
 	}
-	
+
 	private void preloadSfx() {
-	    for (Map.Entry<AudioType, SoundDefinition> entry : catalog.entrySet()) {
-	        SoundDefinition def = entry.getValue();
-	        if (def.category() != AudioCategory.SFX) continue;
-	        Deque<Clip> pool = new ArrayDeque<>();
-	        for (int i = 0; i < def.maxInstances(); i++) {
-	            Clip clip = createClip(def.resourcePath());
-	            if (clip != null) pool.addLast(clip);
-	        }
-	        clipPool.put(def.resourcePath(), pool);
-	    }
+		for (Map.Entry<AudioType, SoundDefinition> entry : catalog.entrySet()) {
+			SoundDefinition def = entry.getValue();
+			if (def.category() != AudioCategory.SFX)
+				continue;
+			Deque<Clip> pool = new ArrayDeque<>();
+			for (int i = 0; i < def.maxInstances(); i++) {
+				Clip clip = createClip(def.resourcePath());
+				if (clip != null)
+					pool.addLast(clip);
+			}
+			clipPool.put(def.resourcePath(), pool);
+		}
 	}
 
 	@Override
@@ -91,34 +93,38 @@ public class JavaSoundAudioService implements AudioService {
 
 	@Override
 	public synchronized void update() {
-		if (!initialized || paused) return;
+		if (!initialized || paused)
+			return;
 		cleanupFinishedSfx();
 		cleanupFinishedMusicIfNeeded();
 	}
 
 	@Override
 	public synchronized void playSfx(AudioType type) {
-	    ensureInitialized();
+		ensureInitialized();
 
-	    SoundDefinition def = findDef(type);
-	    if (def == null) return;
-	    if (def.category() != AudioCategory.SFX) {
-	        LOGGER.warning(() -> "playSfx called with non-SFX type: " + type);
-	        return;
-	    }
-	    if (paused) return;
+		SoundDefinition def = findDef(type);
+		if (def == null)
+			return;
+		if (def.category() != AudioCategory.SFX) {
+			LOGGER.warning(() -> "playSfx called with non-SFX type: " + type);
+			return;
+		}
+		if (paused)
+			return;
 
-	    Deque<Clip> pool = clipPool.get(def.resourcePath());
-	    if (pool == null || pool.isEmpty()) return; // pool exhausted or not loaded
+		Deque<Clip> pool = clipPool.get(def.resourcePath());
+		if (pool == null || pool.isEmpty())
+			return; // pool exhausted or not loaded
 
-	    Clip clip = pool.pollFirst();
-	    applyClipGain(clip, masterVolume * sfxVolume * def.baseVolume());
-	    startClip(clip, false);
+		Clip clip = pool.pollFirst();
+		applyClipGain(clip, masterVolume * sfxVolume * def.baseVolume());
+		startClip(clip, false);
 
-	    // Track it so we can return it to the pool when done
-	    activeSfx.computeIfAbsent(type, id -> new ArrayDeque<>()).addLast(clip);
+		// Track it so we can return it to the pool when done
+		activeSfx.computeIfAbsent(type, id -> new ArrayDeque<>()).addLast(clip);
 	}
-	
+
 	@Override
 	public synchronized void playMusic(AudioType type) {
 		playMusic(type, false);
@@ -129,7 +135,8 @@ public class JavaSoundAudioService implements AudioService {
 		ensureInitialized();
 
 		SoundDefinition def = findDef(type);
-		if (def == null) return;
+		if (def == null)
+			return;
 		if (def.category() != AudioCategory.MUSIC) {
 			LOGGER.warning(() -> "playMusic called with non-MUSIC type: " + type);
 			return;
@@ -145,7 +152,8 @@ public class JavaSoundAudioService implements AudioService {
 		stopMusic();
 
 		Clip newMusic = createClip(def.resourcePath());
-		if (newMusic == null) return;
+		if (newMusic == null)
+			return;
 
 		currentMusicClip = newMusic;
 		currentMusicType = type;
@@ -170,7 +178,8 @@ public class JavaSoundAudioService implements AudioService {
 
 	@Override
 	public synchronized void pauseAll() {
-		if (!initialized || paused) return;
+		if (!initialized || paused)
+			return;
 
 		paused = true;
 
@@ -185,7 +194,8 @@ public class JavaSoundAudioService implements AudioService {
 
 	@Override
 	public synchronized void resumeAll() {
-		if (!initialized || !paused) return;
+		if (!initialized || !paused)
+			return;
 
 		if (currentMusicClip != null && pausedClips.contains(currentMusicClip) && currentMusicClip.isOpen()) {
 			SoundDefinition musicDef = findDef(currentMusicType);
@@ -197,7 +207,8 @@ public class JavaSoundAudioService implements AudioService {
 
 		for (Map.Entry<AudioType, Deque<Clip>> entry : activeSfx.entrySet()) {
 			SoundDefinition def = findDef(entry.getKey());
-			if (def == null) continue;
+			if (def == null)
+				continue;
 			for (Clip clip : entry.getValue()) {
 				if (pausedClips.contains(clip) && clip.isOpen()) {
 					startClip(clip, def.looping());
@@ -278,7 +289,8 @@ public class JavaSoundAudioService implements AudioService {
 
 		for (Map.Entry<AudioType, Deque<Clip>> entry : activeSfx.entrySet()) {
 			SoundDefinition def = findDef(entry.getKey());
-			if (def == null) continue;
+			if (def == null)
+				continue;
 			float effective = masterVolume * sfxVolume * def.baseVolume();
 
 			for (Clip clip : entry.getValue()) {
@@ -288,8 +300,10 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private void applyClipGain(Clip clip, float linearVolume) {
-		if (clip == null || !clip.isOpen()) return;
-		if (!clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return;
+		if (clip == null || !clip.isOpen())
+			return;
+		if (!clip.isControlSupported(FloatControl.Type.MASTER_GAIN))
+			return;
 
 		FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 		float db = AudioMath.toControlDb(linearVolume, gain);
@@ -297,43 +311,48 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private void cleanupFinishedSfx() {
-	    Iterator<Map.Entry<AudioType, Deque<Clip>>> mapIt = activeSfx.entrySet().iterator();
+		Iterator<Map.Entry<AudioType, Deque<Clip>>> mapIt = activeSfx.entrySet().iterator();
 
-	    while (mapIt.hasNext()) {
-	        Map.Entry<AudioType, Deque<Clip>> entry = mapIt.next();
-	        SoundDefinition def = findDef(entry.getKey());
-	        Deque<Clip> clips = entry.getValue();
+		while (mapIt.hasNext()) {
+			Map.Entry<AudioType, Deque<Clip>> entry = mapIt.next();
+			SoundDefinition def = findDef(entry.getKey());
+			Deque<Clip> clips = entry.getValue();
 
-	        Iterator<Clip> clipIt = clips.iterator();
-	        while (clipIt.hasNext()) {
-	            Clip clip = clipIt.next();
-	            if (shouldDisposeClip(clip)) {
-	                clipIt.remove();
-	                // Return to pool instead of closing
-	                if (def != null) {
-	                    Deque<Clip> pool = clipPool.get(def.resourcePath());
-	                    if (pool != null) {
-	                        clip.stop();
-	                        clip.setFramePosition(0);
-	                        pool.addLast(clip);
-	                        continue;
-	                    }
-	                }
-	                closeClip(clip); // fallback if pool not found
-	            }
-	        }
+			Iterator<Clip> clipIt = clips.iterator();
+			while (clipIt.hasNext()) {
+				Clip clip = clipIt.next();
+				if (shouldDisposeClip(clip)) {
+					clipIt.remove();
+					// Return to pool instead of closing
+					if (def != null) {
+						Deque<Clip> pool = clipPool.get(def.resourcePath());
+						if (pool != null) {
+							clip.stop();
+							clip.setFramePosition(0);
+							pool.addLast(clip);
+							continue;
+						}
+					}
+					closeClip(clip); // fallback if pool not found
+				}
+			}
 
-	        if (clips.isEmpty()) mapIt.remove();
-	    }
+			if (clips.isEmpty())
+				mapIt.remove();
+		}
 	}
 
 	private void cleanupFinishedMusicIfNeeded() {
-		if (currentMusicClip == null || currentMusicType == null) return;
-		if (pausedClips.contains(currentMusicClip)) return;
+		if (currentMusicClip == null || currentMusicType == null)
+			return;
+		if (pausedClips.contains(currentMusicClip))
+			return;
 
 		SoundDefinition def = findDef(currentMusicType);
-		if (def == null) return;
-		if (def.looping()) return;
+		if (def == null)
+			return;
+		if (def.looping())
+			return;
 
 		if (!currentMusicClip.isRunning() && !currentMusicClip.isActive()) {
 			closeClip(currentMusicClip);
@@ -343,14 +362,18 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private boolean shouldDisposeClip(Clip clip) {
-		if (clip == null) return true;
-		if (!clip.isOpen()) return true;
-		if (pausedClips.contains(clip)) return false;
+		if (clip == null)
+			return true;
+		if (!clip.isOpen())
+			return true;
+		if (pausedClips.contains(clip))
+			return false;
 		return !clip.isRunning() && !clip.isActive();
 	}
 
 	private void pauseClip(Clip clip) {
-		if (clip == null || !clip.isOpen()) return;
+		if (clip == null || !clip.isOpen())
+			return;
 		if (clip.isRunning()) {
 			clip.stop();
 			pausedClips.add(clip);
@@ -358,7 +381,8 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private void startClip(Clip clip, boolean loop) {
-		if (clip == null || !clip.isOpen()) return;
+		if (clip == null || !clip.isOpen())
+			return;
 
 		clip.stop();
 		clip.setFramePosition(0);
@@ -388,7 +412,8 @@ public class JavaSoundAudioService implements AudioService {
 	}
 
 	private void closeClip(Clip clip) {
-		if (clip == null) return;
+		if (clip == null)
+			return;
 
 		pausedClips.remove(clip);
 
